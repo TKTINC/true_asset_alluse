@@ -1,6 +1,6 @@
 # True-Asset-ALLUSE Deployment Automation
 
-**Autopilot for wealth with weekly income, annual growth, and perpetual peace of mind**
+**Autopilot for Wealth.....Engineered for compounding income and corpus**
 
 This directory contains all the necessary automation scripts, configurations, and documentation for deploying the True-Asset-ALLUSE wealth management autopilot system to AWS in a production environment.
 

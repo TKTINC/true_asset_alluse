@@ -5,7 +5,7 @@
 **Author**: Manus AI  
 **Purpose**: Comprehensive technical reference for LLM understanding and system interaction
 
-**System Tagline**: *"Autopilot for wealth with weekly income, annual growth, and perpetual peace of mind"*
+**System Tagline**: *"Autopilot for Wealth.....Engineered for compounding income and corpus"*
 
 ---
 
@@ -30,9 +30,9 @@
 
 True-Asset-ALLUSE is a **comprehensive wealth management autopilot system** designed to provide:
 
-- **Weekly Income**: Consistent income generation through systematic options strategies
-- **Annual Growth**: Long-term wealth compounding through intelligent capital deployment
-- **Perpetual Peace of Mind**: Fully automated wealth management requiring no daily intervention
+- **Compounding Income**: Systematic income generation that compounds over time through reinvestment
+- **Corpus Growth**: Long-term wealth building through intelligent capital deployment and scaling
+- **Automated Operation**: Fully automated wealth management requiring no daily intervention
 
 The system operates as a **100% rules-based wealth management autopilot**, eliminating human emotion and AI unpredictability from wealth-building decisions. Every action is governed by Constitution v1.3, a comprehensive set of 18 sections that define exact wealth management rules, risk protocols, and operational procedures.
 
@@ -40,9 +40,9 @@ The system operates as a **100% rules-based wealth management autopilot**, elimi
 
 **Wealth Management Autopilot**: The system operates as a comprehensive autopilot for wealth building, providing:
 - **Set-and-Forget Operation**: Once configured, the system operates independently
-- **Consistent Income Generation**: Weekly income through systematic options strategies
-- **Long-term Wealth Compounding**: Annual growth through intelligent capital deployment
-- **Peace of Mind**: Fully automated operation with comprehensive risk management
+- **Compounding Income Generation**: Income that compounds over time through systematic reinvestment
+- **Long-term Corpus Growth**: Wealth building through intelligent capital deployment and scaling
+- **Automated Discipline**: Fully automated operation with comprehensive risk management
 
 **Zero AI Wealth Decisions**: While AI assists in analysis and optimization, all wealth management decisions are made by deterministic rules. This ensures:
 - Complete auditability and compliance

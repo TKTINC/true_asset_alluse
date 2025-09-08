@@ -3,7 +3,7 @@
 **Version**: 2.0
 **Date**: 2024-07-26
 **Author**: Manus AI
-**System Tagline**: *"Autopilot for wealth with weekly income, annual growth, and perpetual peace of mind"*
+**System Tagline**: *"Autopilot for Wealth.....Engineered for compounding income and corpus"*
 
 ## 1. Introduction
 
