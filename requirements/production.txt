@@ -1,0 +1,24 @@
+# Production Dependencies - True-Asset-ALLUSE
+# Optimized for production deployment
+
+-r base.txt
+
+# Production WSGI Server
+gunicorn==21.2.0
+
+# Production Database Connection Pooling
+psycopg2==2.9.9
+
+# Production Monitoring & Logging
+sentry-sdk==1.38.0
+datadog==0.48.0
+
+# Production Security
+python-multipart==0.0.6
+
+# Production Performance
+orjson==3.9.10
+
+# Health Checks
+healthcheck==1.3.3
+
