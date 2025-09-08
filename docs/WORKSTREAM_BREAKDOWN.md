@@ -325,3 +325,66 @@ docs/
 
 Each workstream will have its own implementation details document created upon completion, following the same comprehensive format as WS1.
 
+
+
+---
+
+## WS7: Natural Language Interface & Chatbot
+**Status**: ✅ COMPLETE
+**Dependencies**: WS1-WS6 Complete
+**Lead Component**: GPT-4 Powered Chatbot & Report Narrator
+
+### Phases
+- **Phase 1**: Chatbot Core Implementation ✅
+  - GPT-4 integration for natural language understanding
+  - System knowledge base and context management
+  - Query parser for system commands
+  - Secure and compliant response generation
+
+- **Phase 2**: Report Narrative Generation ✅
+  - Integration with WS5 reporting engine
+  - Natural language report summarization
+  - Performance and risk narrative generation
+  - Customizable narrative styles
+
+### Key Deliverables
+- Interactive chatbot for system queries and commands
+- Natural language report narration
+- GPT-4 powered intelligence with zero decision-making influence
+- Constitution v1.3 compliant communication
+
+---
+
+## WS8: Machine Learning & Intelligence Engine
+**Status**: 🔄 IN PROGRESS
+**Dependencies**: WS1-WS7 Complete
+**Lead Component**: Adaptive Intelligence & Anomaly Detection
+
+### Phases
+- **Phase 1**: Core Components Implementation ✅
+  - Adaptive Learning Engine for historical pattern analysis
+  - Market Anomaly Detector for unusual behavior identification
+
+- **Phase 2**: Pattern Recognition & Predictive Analytics 🔄
+  - Market Pattern Recognition Engine
+  - Predictive Analytics for advisory insights
+  - Intelligence Coordinator for system-wide insights
+
+- **Phase 3**: Integration & Testing
+  - Unit and integration tests for all ML components
+  - System-wide integration with other workstreams
+  - Performance and stability benchmarking
+
+- **Phase 4**: Documentation & Finalization
+  - Comprehensive documentation for all ML components
+  - Final review and compliance verification
+
+### Key Deliverables
+- Adaptive learning from historical data
+- Real-time market anomaly detection
+- Pattern recognition for market conditions
+- Predictive analytics for advisory purposes only
+- Centralized intelligence coordination
+- Full compliance with Constitution v1.3 (zero AI in decisions)
+
+
