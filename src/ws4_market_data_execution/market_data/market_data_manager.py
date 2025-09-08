@@ -46,6 +46,7 @@ class DataProvider(Enum):
     IEX_CLOUD = "iex_cloud"
     POLYGON = "polygon"
     QUANDL = "quandl"
+    DATABENTO = "databento"
 
 
 class MarketState(Enum):
@@ -405,6 +406,22 @@ class MarketDataManager:
             elif provider == DataProvider.ALPHA_VANTAGE:
                 # Would initialize Alpha Vantage API
                 connection = {"type": "alpha_vantage", "status": "connected", "last_heartbeat": datetime.now()}
+                
+            elif provider == DataProvider.DATABENTO:
+                # Initialize Databento provider
+                from .databento_provider import DatabentoProvider, DatabentoConfig
+                databento_config = DatabentoConfig(
+                    api_key=self.config.get("databento_api_key", ""),
+                    dataset="XNAS.ITCH",  # Default to NASDAQ
+                    schema="tbbo"
+                )
+                databento_provider = DatabentoProvider(databento_config)
+                connection = {
+                    "type": "databento", 
+                    "status": "connected", 
+                    "last_heartbeat": datetime.now(),
+                    "provider_instance": databento_provider
+                }
                 
             else:
                 # Generic provider initialization
