@@ -1,0 +1,31 @@
+apiVersion: v2
+name: true-asset-alluse
+description: A Helm chart for True-Asset-ALLUSE trading system
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+keywords:
+  - trading
+  - finance
+  - automation
+  - rules-based
+
+home: https://github.com/TKTINC/true_asset_alluse
+sources:
+  - https://github.com/TKTINC/true_asset_alluse
+
+maintainers:
+  - name: True Asset Team
+    email: support@trueasset.com
+
+dependencies:
+  - name: postgresql
+    version: 12.x.x
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  - name: redis
+    version: 17.x.x
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+
