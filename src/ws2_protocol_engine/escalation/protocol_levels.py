@@ -16,14 +16,14 @@ logger = logging.getLogger(__name__)
 
 class ProtocolLevel(IntEnum):
     """
-    Protocol escalation levels based on ATR breach multiples.
+    Protocol escalation levels per Constitution v1.3 - GPT-5 Corrected.
     
-    Higher numbers indicate higher risk and more intensive monitoring.
+    L0 (normal), L1 (prep), L2 (roll + hedge), L3 (stop-loss + SAFE)
     """
-    NORMAL = 0          # Normal operations (5-minute monitoring)
-    ENHANCED = 1        # Enhanced monitoring (1-minute) at 1× ATR breach
-    RECOVERY = 2        # Recovery mode (30-second) at 2× ATR breach
-    PRESERVATION = 3    # Preservation mode (real-time) at 3× ATR breach
+    LEVEL_0 = 0         # L0: Normal operations (5-minute monitoring)
+    LEVEL_1 = 1         # L1: Prep mode (1-minute monitoring, roll preparation)
+    LEVEL_2 = 2         # L2: Roll + Hedge (30-second monitoring, hedge deployment)
+    LEVEL_3 = 3         # L3: Stop-loss + SAFE (real-time monitoring, emergency exit)
 
 
 class ProtocolState(Enum):

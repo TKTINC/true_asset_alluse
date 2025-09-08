@@ -49,6 +49,13 @@ class GlobalParameters:
     GEN_ACC_FORK_THRESHOLD = Decimal("100000")  # $100K
     REV_ACC_FORK_THRESHOLD = Decimal("500000")  # $500K
     
+    # ATR Configuration - Constitution v1.3 Compliant
+    ATR_PERIOD: int = 5  # Constitution specifies ATR(5), not ATR(14)
+    ATR_REFRESH_TIME: str = "09:30"  # Daily refresh at 9:30 ET
+    ATR_REFRESH_TIMEZONE: str = "US/Eastern"
+    ATR_STALENESS_HOURS: int = 24  # 24h staleness guard
+    ATR_FALLBACK_MULTIPLIER: Decimal = Decimal("1.1")  # Fallback = last valid × 1.1
+    
     # Liquidity Requirements
     MIN_OPEN_INTEREST = 500
     MIN_DAILY_VOLUME = 100
