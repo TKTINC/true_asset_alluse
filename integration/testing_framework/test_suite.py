@@ -552,3 +552,390 @@ if __name__ == "__main__":
     # Run tests
     asyncio.run(run_tests())
 
+
+    async def run_gpt5_corrections_validation(self) -> Dict[str, Any]:
+        """Run GPT-5 corrections validation tests."""
+        logger.info("Running GPT-5 corrections validation...")
+        
+        validation_results = {
+            "overall_success": True,
+            "total_tests": 0,
+            "passed_tests": 0,
+            "failed_tests": 0,
+            "validations": []
+        }
+        
+        try:
+            # Setup test environment
+            await self.setup_test_environment()
+            
+            # Run GPT-5 specific validations
+            gpt5_tests = [
+                ("ATR(5) Parameters", self._validate_atr_5_parameters),
+                ("L0-L3 Protocol Levels", self._validate_protocol_levels),
+                ("50% Roll Cost Threshold", self._validate_roll_cost_threshold),
+                ("Liquidity Guards (OI≥500, Vol≥100, Spread≤5%)", self._validate_liquidity_guards),
+                ("LLMS Specifications (0.25-0.35Δ)", self._validate_llms_specifications),
+                ("Assignment Protocol (Friday 3pm)", self._validate_assignment_protocol),
+                ("Week Classification System", self._validate_week_classification),
+                ("SAFE→ACTIVE State Machine", self._validate_state_machine),
+                ("Earnings Filter Implementation", self._validate_earnings_filter),
+                ("Hedge Deployment (1% SPX + 0.5% VIX)", self._validate_hedge_deployment)
+            ]
+            
+            for test_name, test_method in gpt5_tests:
+                logger.info(f"Validating: {test_name}")
+                try:
+                    result = await test_method()
+                    validation_results["total_tests"] += 1
+                    
+                    if result["passed"]:
+                        validation_results["passed_tests"] += 1
+                        logger.info(f"✅ {test_name}: PASSED")
+                    else:
+                        validation_results["failed_tests"] += 1
+                        validation_results["overall_success"] = False
+                        logger.error(f"❌ {test_name}: FAILED - {result.get('details', 'No details')}")
+                    
+                    validation_results["validations"].append({
+                        "test_name": test_name,
+                        "result": result
+                    })
+                    
+                except Exception as e:
+                    validation_results["total_tests"] += 1
+                    validation_results["failed_tests"] += 1
+                    validation_results["overall_success"] = False
+                    logger.error(f"❌ {test_name}: ERROR - {e}")
+                    
+                    validation_results["validations"].append({
+                        "test_name": test_name,
+                        "result": {
+                            "passed": False,
+                            "error": str(e)
+                        }
+                    })
+            
+            # Generate summary
+            success_rate = (validation_results["passed_tests"] / validation_results["total_tests"]) * 100 if validation_results["total_tests"] > 0 else 0
+            
+            logger.info(f"GPT-5 Corrections Validation Complete:")
+            logger.info(f"  Total Tests: {validation_results['total_tests']}")
+            logger.info(f"  Passed: {validation_results['passed_tests']}")
+            logger.info(f"  Failed: {validation_results['failed_tests']}")
+            logger.info(f"  Success Rate: {success_rate:.1f}%")
+            logger.info(f"  Overall: {'✅ PASSED' if validation_results['overall_success'] else '❌ FAILED'}")
+            
+            return validation_results
+            
+        except Exception as e:
+            logger.error(f"Error running GPT-5 corrections validation: {e}")
+            validation_results["overall_success"] = False
+            validation_results["error"] = str(e)
+            return validation_results
+        
+        finally:
+            await self.teardown_test_environment()
+    
+    # GPT-5 Specific Validation Methods
+    
+    async def _validate_atr_5_parameters(self) -> Dict[str, Any]:
+        """Validate ATR(5) parameters per GPT-5 feedback."""
+        try:
+            atr_engine = self.system.get_component("atr_engine")
+            if not atr_engine:
+                return {"passed": False, "details": "ATR engine not found"}
+            
+            config = atr_engine.get_configuration()
+            
+            # Check ATR period is 5 (not 14)
+            period_correct = config.get("period") == 5
+            
+            # Check 9:30 ET refresh time
+            refresh_correct = config.get("refresh_time") == "09:30"
+            timezone_correct = config.get("timezone") == "US/Eastern"
+            
+            # Check 24h staleness guard
+            staleness_guard = config.get("staleness_guard_hours") == 24
+            fallback_multiplier = config.get("fallback_multiplier") == 1.1
+            
+            passed = all([period_correct, refresh_correct, timezone_correct, staleness_guard, fallback_multiplier])
+            
+            return {
+                "passed": passed,
+                "details": f"Period: {config.get('period')} (expected 5), Refresh: {config.get('refresh_time')} {config.get('timezone')} (expected 09:30 US/Eastern), Staleness: {config.get('staleness_guard_hours')}h, Fallback: {config.get('fallback_multiplier')}x",
+                "expected": "ATR(5) with 9:30 ET refresh, 24h staleness guard, 1.1x fallback",
+                "actual": f"ATR({config.get('period')}) with {config.get('refresh_time')} {config.get('timezone')} refresh, {config.get('staleness_guard_hours')}h staleness, {config.get('fallback_multiplier')}x fallback"
+            }
+            
+        except Exception as e:
+            return {"passed": False, "error": str(e)}
+    
+    async def _validate_protocol_levels(self) -> Dict[str, Any]:
+        """Validate L0-L3 protocol levels per GPT-5 feedback."""
+        try:
+            escalation_manager = self.system.get_component("escalation_manager")
+            if not escalation_manager:
+                return {"passed": False, "details": "Escalation manager not found"}
+            
+            levels = escalation_manager.get_protocol_levels()
+            expected_levels = ["L0", "L1", "L2", "L3"]
+            
+            # Check all expected levels exist
+            levels_exist = all(level in levels for level in expected_levels)
+            
+            # Check level descriptions match Constitution
+            l0_correct = "Normal" in levels.get("L0", {}).get("description", "")
+            l1_correct = "Prep" in levels.get("L1", {}).get("description", "")
+            l2_correct = "Roll + Hedge" in levels.get("L2", {}).get("description", "")
+            l3_correct = "Stop-loss + SAFE" in levels.get("L3", {}).get("description", "")
+            
+            passed = levels_exist and l0_correct and l1_correct and l2_correct and l3_correct
+            
+            return {
+                "passed": passed,
+                "details": f"Available levels: {list(levels.keys())}, Descriptions validated: L0={l0_correct}, L1={l1_correct}, L2={l2_correct}, L3={l3_correct}",
+                "expected": "L0 (Normal), L1 (Prep), L2 (Roll + Hedge), L3 (Stop-loss + SAFE)",
+                "actual": f"Levels: {list(levels.keys())}"
+            }
+            
+        except Exception as e:
+            return {"passed": False, "error": str(e)}
+    
+    async def _validate_roll_cost_threshold(self) -> Dict[str, Any]:
+        """Validate 50% roll cost threshold per GPT-5 feedback."""
+        try:
+            roll_cost_threshold = self.system.get_component("roll_cost_threshold")
+            if not roll_cost_threshold:
+                return {"passed": False, "details": "Roll cost threshold component not found"}
+            
+            config = roll_cost_threshold.get_configuration()
+            threshold_correct = config.get("max_cost_threshold_pct") == 50.0
+            escalate_on_exceed = config.get("escalate_to_l3_on_exceed") == True
+            
+            passed = threshold_correct and escalate_on_exceed
+            
+            return {
+                "passed": passed,
+                "details": f"Threshold: {config.get('max_cost_threshold_pct')}% (expected 50%), Escalate to L3: {config.get('escalate_to_l3_on_exceed')}",
+                "expected": "50% threshold with L3 escalation",
+                "actual": f"{config.get('max_cost_threshold_pct')}% threshold, L3 escalation: {config.get('escalate_to_l3_on_exceed')}"
+            }
+            
+        except Exception as e:
+            return {"passed": False, "error": str(e)}
+    
+    async def _validate_liquidity_guards(self) -> Dict[str, Any]:
+        """Validate liquidity guards per GPT-5 feedback."""
+        try:
+            liquidity_validator = self.system.get_component("liquidity_validator")
+            if not liquidity_validator:
+                return {"passed": False, "details": "Liquidity validator not found"}
+            
+            config = liquidity_validator.get_configuration()
+            
+            oi_correct = config.get("min_open_interest") >= 500
+            volume_correct = config.get("min_daily_volume") >= 100
+            spread_correct = config.get("max_bid_ask_spread_pct") <= 5.0
+            adv_limit_correct = config.get("max_order_size_pct_of_adv") <= 10.0
+            
+            passed = oi_correct and volume_correct and spread_correct and adv_limit_correct
+            
+            return {
+                "passed": passed,
+                "details": f"OI: {config.get('min_open_interest')} (≥500), Vol: {config.get('min_daily_volume')} (≥100), Spread: {config.get('max_bid_ask_spread_pct')}% (≤5%), ADV: {config.get('max_order_size_pct_of_adv')}% (≤10%)",
+                "expected": "OI ≥ 500, Vol ≥ 100, Spread ≤ 5%, Order ≤ 10% ADV",
+                "actual": f"OI ≥ {config.get('min_open_interest')}, Vol ≥ {config.get('min_daily_volume')}, Spread ≤ {config.get('max_bid_ask_spread_pct')}%, Order ≤ {config.get('max_order_size_pct_of_adv')}% ADV"
+            }
+            
+        except Exception as e:
+            return {"passed": False, "error": str(e)}
+    
+    async def _validate_llms_specifications(self) -> Dict[str, Any]:
+        """Validate LLMS specifications per GPT-5 feedback."""
+        try:
+            llms_specs = self.system.get_component("llms_specifications")
+            if not llms_specs:
+                return {"passed": False, "details": "LLMS specifications not found"}
+            
+            config = llms_specs.get_configuration()
+            
+            # Check delta ranges for calls (0.25-0.35)
+            min_delta_correct = config.get("call_min_delta") == 0.25
+            max_delta_correct = config.get("call_max_delta") == 0.35
+            
+            # Check OTM puts (10-20%)
+            otm_put_min = config.get("put_otm_min_pct") == 10
+            otm_put_max = config.get("put_otm_max_pct") == 20
+            
+            # Check reinvestment allocation (25%)
+            reinvestment_correct = config.get("reinvestment_allocation_pct") == 25
+            
+            passed = min_delta_correct and max_delta_correct and otm_put_min and otm_put_max and reinvestment_correct
+            
+            return {
+                "passed": passed,
+                "details": f"Call Delta: {config.get('call_min_delta')}-{config.get('call_max_delta')} (expected 0.25-0.35), Put OTM: {config.get('put_otm_min_pct')}-{config.get('put_otm_max_pct')}% (expected 10-20%), Reinvestment: {config.get('reinvestment_allocation_pct')}% (expected 25%)",
+                "expected": "0.25-0.35Δ calls, 10-20% OTM puts, 25% reinvestment",
+                "actual": f"{config.get('call_min_delta')}-{config.get('call_max_delta')}Δ calls, {config.get('put_otm_min_pct')}-{config.get('put_otm_max_pct')}% OTM puts, {config.get('reinvestment_allocation_pct')}% reinvestment"
+            }
+            
+        except Exception as e:
+            return {"passed": False, "error": str(e)}
+    
+    async def _validate_assignment_protocol(self) -> Dict[str, Any]:
+        """Validate assignment protocol per GPT-5 feedback."""
+        try:
+            assignment_protocol = self.system.get_component("assignment_protocol")
+            if not assignment_protocol:
+                return {"passed": False, "details": "Assignment protocol not found"}
+            
+            config = assignment_protocol.get_configuration()
+            
+            # Check Friday 3pm ET check
+            friday_time_correct = config.get("friday_check_time") == "15:00"
+            timezone_correct = config.get("timezone") == "US/Eastern"
+            
+            # Check ITM threshold
+            itm_threshold_correct = config.get("itm_threshold") == 0.01  # 1 cent ITM
+            
+            # Check CC pivot rules
+            cc_pivot_enabled = config.get("cc_pivot_enabled") == True
+            
+            passed = friday_time_correct and timezone_correct and itm_threshold_correct and cc_pivot_enabled
+            
+            return {
+                "passed": passed,
+                "details": f"Friday check: {config.get('friday_check_time')} {config.get('timezone')} (expected 15:00 US/Eastern), ITM threshold: ${config.get('itm_threshold')} (expected $0.01), CC pivot: {config.get('cc_pivot_enabled')}",
+                "expected": "Friday 3pm ET ITM checks with CC pivot rules",
+                "actual": f"Friday {config.get('friday_check_time')} {config.get('timezone')} ITM checks, CC pivot: {config.get('cc_pivot_enabled')}"
+            }
+            
+        except Exception as e:
+            return {"passed": False, "error": str(e)}
+    
+    async def _validate_week_classification(self) -> Dict[str, Any]:
+        """Validate week classification system per GPT-5 feedback."""
+        try:
+            week_classification = self.system.get_component("week_classification")
+            if not week_classification:
+                return {"passed": False, "details": "Week classification system not found"}
+            
+            config = week_classification.get_configuration()
+            
+            # Check week types
+            week_types = config.get("week_types", [])
+            expected_types = ["Normal", "Earnings", "FOMC", "OpEx", "Holiday"]
+            types_correct = all(wtype in week_types for wtype in expected_types)
+            
+            # Check classification logic
+            earnings_logic = config.get("earnings_classification_enabled") == True
+            fomc_logic = config.get("fomc_classification_enabled") == True
+            opex_logic = config.get("opex_classification_enabled") == True
+            
+            passed = types_correct and earnings_logic and fomc_logic and opex_logic
+            
+            return {
+                "passed": passed,
+                "details": f"Week types: {week_types} (expected {expected_types}), Earnings logic: {earnings_logic}, FOMC logic: {fomc_logic}, OpEx logic: {opex_logic}",
+                "expected": "Normal, Earnings, FOMC, OpEx, Holiday week types with classification logic",
+                "actual": f"Types: {week_types}, Classification enabled: Earnings={earnings_logic}, FOMC={fomc_logic}, OpEx={opex_logic}"
+            }
+            
+        except Exception as e:
+            return {"passed": False, "error": str(e)}
+    
+    async def _validate_state_machine(self) -> Dict[str, Any]:
+        """Validate SAFE→ACTIVE state machine per GPT-5 feedback."""
+        try:
+            state_machine = self.system.get_component("safe_active_reconciliation")
+            if not state_machine:
+                return {"passed": False, "details": "SAFE→ACTIVE state machine not found"}
+            
+            config = state_machine.get_configuration()
+            
+            # Check state transitions
+            safe_to_active = config.get("safe_to_active_enabled") == True
+            reconciliation_enabled = config.get("reconciliation_enabled") == True
+            
+            # Check reconciliation process
+            position_reconciliation = config.get("position_reconciliation_enabled") == True
+            cash_reconciliation = config.get("cash_reconciliation_enabled") == True
+            
+            passed = safe_to_active and reconciliation_enabled and position_reconciliation and cash_reconciliation
+            
+            return {
+                "passed": passed,
+                "details": f"SAFE→ACTIVE: {safe_to_active}, Reconciliation: {reconciliation_enabled}, Position reconciliation: {position_reconciliation}, Cash reconciliation: {cash_reconciliation}",
+                "expected": "SAFE→ACTIVE transitions with position and cash reconciliation",
+                "actual": f"Transitions: {safe_to_active}, Reconciliation: {reconciliation_enabled}, Position: {position_reconciliation}, Cash: {cash_reconciliation}"
+            }
+            
+        except Exception as e:
+            return {"passed": False, "error": str(e)}
+    
+    async def _validate_earnings_filter(self) -> Dict[str, Any]:
+        """Validate earnings filter per GPT-5 feedback."""
+        try:
+            earnings_filter = self.system.get_component("earnings_filter")
+            if not earnings_filter:
+                return {"passed": False, "details": "Earnings filter not found"}
+            
+            config = earnings_filter.get_configuration()
+            
+            # Check CSP earnings avoidance
+            csp_earnings_filter = config.get("csp_earnings_filter_enabled") == True
+            
+            # Check earnings data sources
+            data_sources = config.get("earnings_data_sources", [])
+            has_data_sources = len(data_sources) > 0
+            
+            # Check filter timing
+            filter_days_before = config.get("filter_days_before_earnings") >= 1
+            filter_days_after = config.get("filter_days_after_earnings") >= 1
+            
+            passed = csp_earnings_filter and has_data_sources and filter_days_before and filter_days_after
+            
+            return {
+                "passed": passed,
+                "details": f"CSP filter: {csp_earnings_filter}, Data sources: {len(data_sources)}, Days before: {config.get('filter_days_before_earnings')}, Days after: {config.get('filter_days_after_earnings')}",
+                "expected": "CSP earnings filter with data sources and timing buffer",
+                "actual": f"Filter: {csp_earnings_filter}, Sources: {len(data_sources)}, Before: {config.get('filter_days_before_earnings')}d, After: {config.get('filter_days_after_earnings')}d"
+            }
+            
+        except Exception as e:
+            return {"passed": False, "error": str(e)}
+    
+    async def _validate_hedge_deployment(self) -> Dict[str, Any]:
+        """Validate hedge deployment per GPT-5 feedback."""
+        try:
+            hedge_deployment = self.system.get_component("hedge_deployment")
+            if not hedge_deployment:
+                return {"passed": False, "details": "Hedge deployment manager not found"}
+            
+            config = hedge_deployment.get_configuration()
+            
+            # Check hedge allocation (1% SPX + 0.5% VIX)
+            spx_allocation = config.get("spx_put_allocation_pct") == 1.0
+            vix_allocation = config.get("vix_call_allocation_pct") == 0.5
+            
+            # Check budget calculation
+            budget_min_pct = config.get("budget_min_pct_quarterly_gains") == 5.0
+            budget_max_pct = config.get("budget_max_pct_quarterly_gains") == 10.0
+            budget_fallback_pct = config.get("budget_fallback_pct_sleeve_equity") == 1.0
+            
+            # Check L2 trigger
+            l2_trigger = config.get("deploy_at_protocol_l2") == True
+            
+            passed = spx_allocation and vix_allocation and budget_min_pct and budget_max_pct and budget_fallback_pct and l2_trigger
+            
+            return {
+                "passed": passed,
+                "details": f"SPX: {config.get('spx_put_allocation_pct')}% (expected 1%), VIX: {config.get('vix_call_allocation_pct')}% (expected 0.5%), Budget: {config.get('budget_min_pct_quarterly_gains')}-{config.get('budget_max_pct_quarterly_gains')}% gains or {config.get('budget_fallback_pct_sleeve_equity')}% equity, L2 trigger: {config.get('deploy_at_protocol_l2')}",
+                "expected": "1% SPX puts + 0.5% VIX calls at L2, budget 5-10% gains or 1% equity",
+                "actual": f"{config.get('spx_put_allocation_pct')}% SPX + {config.get('vix_call_allocation_pct')}% VIX at L2, budget {config.get('budget_min_pct_quarterly_gains')}-{config.get('budget_max_pct_quarterly_gains')}% gains or {config.get('budget_fallback_pct_sleeve_equity')}% equity"
+            }
+            
+        except Exception as e:
+            return {"passed": False, "error": str(e)}
+
