@@ -5,7 +5,7 @@ This module implements the main Rules Engine that orchestrates all constitutiona
 rules and provides the primary interface for rule validation and enforcement.
 
 The Rules Engine is the central component that ensures 100% deterministic
-rule execution with zero AI trading decisions.
+rule execution with zero AI wealth management decisions.
 """
 
 from typing import Dict, List, Any, Optional, Tuple

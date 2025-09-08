@@ -1,7 +1,7 @@
 """
 True-Asset-ALLUSE: Rules-Based Autonomous Trading System
 
-A revolutionary rules-based autonomous trading system that represents the first TRUE ASSET
+A revolutionary rules-based autonomous wealth management autopilot system that represents the first TRUE ASSET
 in financial technology. Built using the proven ALL-USE methodology across 6 workstreams.
 
 Copyright (c) 2024 True Asset Team

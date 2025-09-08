@@ -32,7 +32,7 @@ The True-Asset-ALLUSE system is implemented across 6 specialized workstreams, ea
   - Comprehensive test suite
 
 ### Key Deliverables
-- 100% deterministic rule execution (zero AI trading decisions)
+- 100% deterministic rule execution (zero AI wealth management decisions)
 - Complete Constitution v1.3 implementation
 - Account-specific rules (Gen/Rev/Com)
 - Protocol Engine rules (4-level ATR escalation)

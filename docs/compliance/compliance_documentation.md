@@ -10,7 +10,7 @@ This document provides a comprehensive overview of the compliance and regulatory
 
 ## 2. Constitution v1.3 Compliance
 
-The True-Asset-ALLUSE system is designed to be 100% compliant with Constitution v1.3. All trading decisions, risk management actions, and account operations are validated against the rules engine to ensure full adherence to the constitutional requirements.
+The True-Asset-ALLUSE system is designed to be 100% compliant with Constitution v1.3. All wealth management decisions, risk management actions, and account operations are validated against the rules engine to ensure full adherence to the constitutional requirements.
 
 ### 2.1. Rules Engine
 
@@ -18,7 +18,7 @@ The rules engine is the core component responsible for enforcing Constitution v1
 
 ### 2.2. Audit Trail
 
-The system maintains a complete and immutable audit trail of all activities, including trading decisions, rule validations, and system events. This audit trail provides a transparent and verifiable record of all operations for compliance and regulatory purposes.
+The system maintains a complete and immutable audit trail of all activities, including wealth management decisions, rule validations, and system events. This audit trail provides a transparent and verifiable record of all operations for compliance and regulatory purposes.
 
 ## 3. Regulatory Compliance
 

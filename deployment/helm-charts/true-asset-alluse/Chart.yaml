@@ -1,15 +1,16 @@
 apiVersion: v2
 name: true-asset-alluse
-description: A Helm chart for True-Asset-ALLUSE trading system
+description: Autopilot for wealth with weekly income, annual growth, and perpetual peace of mind - A comprehensive wealth management autopilot system
 type: application
 version: 1.0.0
 appVersion: "1.0.0"
 
 keywords:
-  - trading
+  - wealth-management
   - finance
   - automation
   - rules-based
+  - income-generation
 
 home: https://github.com/TKTINC/true_asset_alluse
 sources:

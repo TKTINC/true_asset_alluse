@@ -7,10 +7,10 @@
 
 ## Executive Summary
 
-WS1 (Rules Engine & Constitution Framework) is the foundational workstream that implements 100% deterministic rule execution with zero AI trading decisions. It provides the core constitutional framework that governs all system operations and ensures complete compliance with Constitution v1.3.
+WS1 (Rules Engine & Constitution Framework) is the foundational workstream that implements 100% deterministic rule execution with zero AI wealth management decisions. It provides the core constitutional framework that governs all system operations and ensures complete compliance with Constitution v1.3.
 
 ### Key Achievements
-- **100% Rule-Based**: Zero AI involvement in trading decisions
+- **100% Rule-Based**: Zero AI involvement in wealth management decisions
 - **Constitution v1.3**: Complete implementation of all 18 sections
 - **5 Validators**: Comprehensive validation framework
 - **Audit Trail**: Immutable compliance logging

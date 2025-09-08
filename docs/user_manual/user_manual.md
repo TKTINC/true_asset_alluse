@@ -1,16 +1,17 @@
 # True-Asset-ALLUSE User Manual
 
-**Version**: 1.0
+**Version**: 2.0
 **Date**: 2024-07-26
 **Author**: Manus AI
+**System Tagline**: *"Autopilot for wealth with weekly income, annual growth, and perpetual peace of mind"*
 
 ## 1. Introduction
 
-Welcome to the True-Asset-ALLUSE system! This user manual provides a comprehensive guide to using the platform, from getting started to advanced trading and portfolio management. The True-Asset-ALLUSE system is a fully automated, 100% rules-based trading platform designed for professional traders and investment managers.
+Welcome to the True-Asset-ALLUSE system! This user manual provides a comprehensive guide to using the platform, from getting started to advanced wealth management and portfolio optimization. The True-Asset-ALLUSE system is a fully automated, 100% rules-based wealth management autopilot platform designed for individuals seeking consistent weekly income, annual growth, and perpetual peace of mind.
 
 ## 2. Getting Started
 
-This section guides you through the initial setup and configuration of your True-Asset-ALLUSE account.
+This section guides you through the initial setup and configuration of your True-Asset-ALLUSE wealth management account.
 
 ### 2.1. Account Creation
 
@@ -18,7 +19,7 @@ To create an account, navigate to the registration page and provide the required
 
 ### 2.2. Initial Configuration
 
-Once your account is created, you will need to configure your trading preferences, risk settings, and API keys for your brokerage account.
+Once your account is created, you will need to configure your wealth management preferences, risk settings, and API keys for your brokerage account.
 
 ## 3. Web Dashboard
 
@@ -42,7 +43,7 @@ The reporting and analytics section allows you to generate comprehensive portfol
 
 ## 4. Trading Interface
 
-The trading interface provides a professional-grade environment for order management, position tracking, and trade execution.
+The wealth monitoring interface provides a professional-grade environment for order management, position tracking, and trade execution.
 
 ### 4.1. Order Entry
 

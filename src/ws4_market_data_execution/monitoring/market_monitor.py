@@ -3,7 +3,7 @@ Market Monitor
 
 This module implements comprehensive real-time market monitoring that tracks
 market conditions, volatility, liquidity, and system health to support
-trading decisions and risk management in the True-Asset-ALLUSE system.
+wealth management decisions and risk management in the True-Asset-ALLUSE system.
 """
 
 from typing import Dict, Any, Optional, List, Callable, Set

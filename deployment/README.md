@@ -1,6 +1,8 @@
-# True-Asset-ALLUSE Production Deployment Guide
+# True-Asset-ALLUSE Deployment Automation
 
-This directory contains all the necessary automation scripts, configurations, and documentation for deploying the True-Asset-ALLUSE system to AWS in a production environment.
+**Autopilot for wealth with weekly income, annual growth, and perpetual peace of mind**
+
+This directory contains all the necessary automation scripts, configurations, and documentation for deploying the True-Asset-ALLUSE wealth management autopilot system to AWS in a production environment.
 
 ## 🚀 One-Click Deployment
 

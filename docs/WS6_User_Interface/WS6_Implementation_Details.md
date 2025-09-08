@@ -2,7 +2,7 @@
 
 ## Overview
 
-WS6 (User Interface & API Layer) is the user-facing workstream that provides a comprehensive interface for interacting with the True-Asset-ALLUSE system. It includes the API gateway, web dashboard, trading interface, reporting tools, and mobile features.
+WS6 (User Interface & API Layer) is the user-facing workstream that provides a comprehensive interface for interacting with the True-Asset-ALLUSE system. It includes the API gateway, web dashboard, wealth monitoring interface, reporting tools, and mobile features.
 
 ## Architecture
 
@@ -52,7 +52,7 @@ WS6_User_Interface/
 ### Components Implemented
 
 #### TradingAPI
-- **Purpose**: Backend for the trading interface
+- **Purpose**: Backend for the wealth monitoring interface
 - **Key Features**:
   - API endpoints for order management, position tracking, and trade execution
   - Real-time updates with WebSockets

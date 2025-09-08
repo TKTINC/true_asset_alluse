@@ -38,7 +38,7 @@ Build the world's first TRUE ASSET - a deterministic, rules-based autonomous tra
 - **Autonomy**: Discipline enforced by deterministic rules and automated execution
 
 ### 2.2 Core Principles
-1. **100% Rules-Based**: No AI trading decisions, only rule execution
+1. **100% Rules-Based**: No AI wealth management decisions, only rule execution
 2. **Deterministic**: Same inputs always produce same outputs
 3. **Transparent**: Every decision traceable to Constitution rules
 4. **Resumable**: System can restart and continue from any point
@@ -61,7 +61,7 @@ Build the world's first TRUE ASSET - a deterministic, rules-based autonomous tra
 #### 2.3.2 Out of Scope (PoC Phase)
 - Multi-broker integration
 - Scaling beyond $5M AUM
-- AI autonomous trading decisions
+- AI autonomous wealth management decisions
 - Real-time algorithmic trading
 - High-frequency trading capabilities
 - Options market making
@@ -271,7 +271,7 @@ Primary Account ($300K Example)
 ### 4.4 Compliance Requirements
 - **NFR-C-001**: Maintain immutable audit trail for 7 years
 - **NFR-C-002**: Generate FINRA/SEC compliant reports
-- **NFR-C-003**: All trading decisions MUST be traceable to Constitution rules
+- **NFR-C-003**: All wealth management decisions MUST be traceable to Constitution rules
 - **NFR-C-004**: Support regulatory examination requests
 - **NFR-C-005**: Implement proper record retention policies
 
@@ -312,7 +312,7 @@ Primary Account ($300K Example)
 
 ### 6.1 Natural Language Reporting
 - **AI-NL-001**: Generate human-readable explanations of system actions
-- **AI-NL-002**: Answer user queries about trading decisions
+- **AI-NL-002**: Answer user queries about wealth management decisions
 - **AI-NL-003**: Explain Protocol Engine escalations
 - **AI-NL-004**: Provide weekly/monthly narrative summaries
 
@@ -329,7 +329,7 @@ Primary Account ($300K Example)
 - **AI-LO-004**: ALL suggestions REQUIRE human approval
 
 ### 6.4 AI Constraints
-- **AI-C-001**: AI MUST NOT make autonomous trading decisions
+- **AI-C-001**: AI MUST NOT make autonomous wealth management decisions
 - **AI-C-002**: AI MUST NOT override Constitution rules
 - **AI-C-003**: All AI outputs MUST be logged and auditable
 - **AI-C-004**: AI suggestions MUST require explicit human approval
@@ -486,7 +486,7 @@ Primary Account ($300K Example)
 ### 12.2 Operational Metrics
 - **System Uptime**: 99.5% during market hours
 - **Order Fill Rate**: >98% within slippage tolerance
-- **Manual Intervention**: <1% of trading decisions
+- **Manual Intervention**: <1% of wealth management decisions
 - **Report Generation**: 100% automated and on-time
 - **Error Rate**: <0.1% of transactions
 

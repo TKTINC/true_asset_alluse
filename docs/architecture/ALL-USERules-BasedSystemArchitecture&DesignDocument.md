@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-This document defines the comprehensive system architecture for implementing the TRUE ALL-USE system as specified in the Constitution v1.3 and System Overview v1.2. This is a **rules-based, deterministic system** with NO autonomous AI trading decisions - AI is used only for reporting, anomaly detection, and optimization suggestions that require human approval.
+This document defines the comprehensive system architecture for implementing the TRUE ALL-USE system as specified in the Constitution v1.3 and System Overview v1.2. This is a **rules-based, deterministic system** with NO autonomous AI wealth management decisions - AI is used only for reporting, anomaly detection, and optimization suggestions that require human approval.
 
 ### Key Architectural Principles
 
@@ -512,7 +512,7 @@ class DataValidator:
 
 ### 4.1 Natural Language Report Generator
 
-The AI system generates human-readable explanations of system actions without making trading decisions.
+The AI system generates human-readable explanations of system actions without making wealth management decisions.
 
 #### 4.1.1 Report Generator
 ```python
@@ -711,7 +711,7 @@ class AuditLogger:
         self.compliance_reporter = ComplianceReporter()
     
     def log_trade_decision(self, decision_context):
-        """Log all trading decisions with full context"""
+        """Log all wealth management decisions with full context"""
         
     def log_rule_evaluation(self, rule, input_data, result):
         """Log Constitution rule evaluations"""

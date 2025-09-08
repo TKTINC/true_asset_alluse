@@ -2,7 +2,7 @@
 WS1: Rules Engine & Constitution Framework
 
 This workstream implements the core rules engine that enforces Constitution v1.3
-with 100% deterministic rule execution. No AI trading decisions are made here -
+with 100% deterministic rule execution. No AI wealth management decisions are made here -
 only rule validation, compliance checking, and audit trail generation.
 
 Components:
@@ -12,7 +12,7 @@ Components:
 - Compliance audit trail system
 - Rule violation detection and prevention
 
-All trading decisions are deterministic and traceable to specific Constitution sections.
+All wealth management decisions are deterministic and traceable to specific Constitution sections.
 """
 
 from .constitution import ConstitutionV13
