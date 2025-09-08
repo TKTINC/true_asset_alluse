@@ -1,6 +1,6 @@
-# True-Asset-ALLUSE Complete System Guide for LLM Understanding
+# True-Asset-ALLUSE System - LLM Onboarding Guide
 
-**Version**: 2.0  
+**Version**: 3.0  
 **Date**: 2024-07-26  
 **Author**: Manus AI  
 **Purpose**: Comprehensive technical reference for LLM understanding and system interaction
@@ -459,17 +459,190 @@ def dashboard():
 
 ---
 
+### 3.7. WS7: Natural Language Interface & Chatbot
+
+**Purpose**: Provides human-friendly interaction capabilities and automated report narration while maintaining strict Constitution v1.3 compliance.
+
+**Wealth Chatbot**:
+```python
+class WealthChatbot:
+    def __init__(self):
+        self.gpt4_client = OpenAI()
+        self.knowledge_base = SystemKnowledgeBase()
+        self.compliance_filter = ConstitutionComplianceFilter()
+        self.conversation_manager = ConversationManager()
+    
+    async def process_query(self, query: str, user_context: dict) -> ChatbotResponse:
+        # Parse user intent
+        intent = await self.parse_intent(query)
+        
+        # Route to appropriate system component
+        system_response = await self.route_command(intent, user_context)
+        
+        # Generate natural language response
+        nl_response = await self.generate_response(system_response, intent)
+        
+        # Apply compliance filtering
+        filtered_response = self.compliance_filter.filter(nl_response)
+        
+        return ChatbotResponse(
+            response=filtered_response,
+            confidence=intent.confidence,
+            sources=system_response.sources
+        )
+```
+
+**Narrative Generator**:
+```python
+class NarrativeGenerator:
+    def __init__(self):
+        self.template_engine = NarrativeTemplateEngine()
+        self.style_manager = NarrativeStyleManager()
+        self.fact_checker = FactualAccuracyChecker()
+    
+    async def generate_performance_narrative(self, performance_data: dict) -> str:
+        # Select appropriate template
+        template = self.template_engine.select_template("performance", performance_data)
+        
+        # Generate narrative content
+        narrative = await self.generate_content(template, performance_data)
+        
+        # Apply style and formatting
+        styled_narrative = self.style_manager.apply_style(narrative, "professional")
+        
+        # Verify factual accuracy
+        verified_narrative = self.fact_checker.verify(styled_narrative, performance_data)
+        
+        return verified_narrative
+```
+
+**Key Features**:
+- **Zero Decision Authority**: Cannot initiate or modify trading decisions
+- **Read-Only Access**: All queries are information requests only
+- **Constitution Compliance**: All responses filtered for compliance
+- **Audit Trail**: Complete logging of all AI-generated content
+- **Multi-Turn Conversations**: Context-aware conversation management
+
+### 3.8. WS8: Machine Learning & Intelligence Engine
+
+**Purpose**: Provides advisory insights, pattern recognition, and anomaly detection while maintaining zero AI involvement in wealth management decisions.
+
+**Intelligence Coordinator**:
+```python
+class IntelligenceCoordinator:
+    def __init__(self, audit_manager: AuditTrailManager):
+        self.learning_engine = AdaptiveLearningEngine(audit_manager)
+        self.anomaly_detector = MarketAnomalyDetector(audit_manager)
+        self.pattern_engine = PatternRecognitionEngine(audit_manager)
+        self.predictive_engine = PredictiveAnalyticsEngine(audit_manager)
+        self.operation_mode = IntelligenceMode.COMPREHENSIVE
+    
+    async def process_market_data(self, market_data: dict):
+        # Distribute data to all ML components
+        await self.anomaly_detector.add_market_data(market_data)
+        await self.pattern_engine.add_historical_data(market_data)
+        await self.predictive_engine.add_training_data(market_data)
+        
+        # Update system intelligence
+        await self._update_system_intelligence()
+    
+    async def generate_intelligence_report(self, report_type: str) -> IntelligenceReport:
+        # Aggregate insights from all components
+        insights = self.learning_engine.insights_cache
+        alerts = await self.anomaly_detector.get_recent_alerts()
+        patterns = await self.pattern_engine.get_recent_matches()
+        forecasts = await self.predictive_engine.get_active_forecasts()
+        
+        # Generate comprehensive intelligence report
+        return IntelligenceReport(
+            learning_insights=insights,
+            anomaly_alerts=alerts,
+            pattern_matches=patterns,
+            forecasts=forecasts,
+            confidence_score=self._calculate_overall_confidence(insights, alerts, patterns, forecasts),
+            risk_assessment=self._generate_risk_assessment(alerts, patterns, forecasts)
+        )
+```
+
+**Adaptive Learning Engine**:
+```python
+class AdaptiveLearningEngine:
+    def __init__(self, audit_manager: AuditTrailManager):
+        self.models = {
+            LearningMode.WEEK_TYPE_LEARNING: RandomForestClassifier(),
+            LearningMode.PERFORMANCE_PREDICTION: GradientBoostingRegressor(),
+            LearningMode.RISK_ASSESSMENT: RandomForestRegressor(),
+            LearningMode.PATTERN_RECOGNITION: KMeans()
+        }
+        self.learning_data = []
+        self.insights_cache = []
+    
+    async def predict_week_type(self, market_data: dict) -> Tuple[WeekType, float]:
+        # Extract features from market data
+        features = self._extract_features(market_data)
+        
+        # Make prediction using trained model
+        model = self.models[LearningMode.WEEK_TYPE_LEARNING]
+        prediction = model.predict([features])[0]
+        confidence = model.predict_proba([features]).max()
+        
+        return WeekType(prediction), confidence
+```
+
+**Market Anomaly Detector**:
+```python
+class MarketAnomalyDetector:
+    def __init__(self, audit_manager: AuditTrailManager, config: AnomalyDetectionConfig = None):
+        self.isolation_forests = {
+            AnomalyType.MARKET_VOLATILITY: IsolationForest(),
+            AnomalyType.PRICE_MOVEMENT: IsolationForest(),
+            AnomalyType.VOLUME_ANOMALY: IsolationForest(),
+            AnomalyType.SYSTEM_PERFORMANCE: IsolationForest()
+        }
+        self.statistical_baselines = {}
+        self.recent_alerts = []
+    
+    async def detect_anomalies(self, data: dict, data_type: str) -> List[AnomalyAlert]:
+        alerts = []
+        
+        # Statistical anomaly detection
+        statistical_anomalies = await self._detect_statistical_anomalies(data, data_type)
+        alerts.extend(statistical_anomalies)
+        
+        # ML-based anomaly detection
+        ml_anomalies = await self._detect_ml_anomalies(data, data_type)
+        alerts.extend(ml_anomalies)
+        
+        return alerts
+```
+
+**Key Features**:
+- **Advisory Only**: All outputs clearly marked as advisory insights
+- **Pattern Recognition**: Identifies market patterns and regimes
+- **Anomaly Detection**: Real-time detection of unusual market behavior
+- **Predictive Analytics**: Forecasting for advisory purposes only
+- **Adaptive Learning**: Continuous improvement from historical data
+- **Full Compliance**: Maintains Constitution v1.3 compliance
+
+---
+
 ## 4. Data Flow & System Interactions
 
 ### 4.1. Complete System Data Flow
 
 ```
 Market Data → WS4 → WS2 (Risk Assessment) → WS1 (Rule Validation) → Wealth Decision
-                ↓
+                ↓                                    ↓
+WS8 (ML Intelligence) ← WS7 (NL Interface) ← WS6 (User Interface)
+                ↓                                    ↓
 WS3 (Account Management) ← WS5 (Portfolio Analysis) ← WS1 (Audit Trail)
-                ↓
-WS6 (User Interface) ← All Workstreams (Wealth Status Updates)
 ```
+
+**Enhanced Data Flow with WS7 & WS8**:
+- **WS7**: Provides natural language interface for user queries and automated report narration
+- **WS8**: Analyzes all system data for patterns, anomalies, and predictive insights (advisory only)
+- **Intelligence Integration**: WS8 insights feed into WS7 for enhanced user communication
+- **Compliance Layer**: Both WS7 and WS8 maintain strict Constitution v1.3 compliance
 
 ### 4.2. Wealth Management Decision Flow
 

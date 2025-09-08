@@ -22,7 +22,7 @@ The system architecture is guided by the following principles:
 
 ## 3. System Overview
 
-The True-Asset-ALLUSE system is composed of six interconnected workstreams:
+The True-Asset-ALLUSE system is composed of eight interconnected workstreams:
 
 - **WS1: Rules Engine & Constitution Framework**: The core of the system, responsible for enforcing Constitution v1.3 and validating all wealth management decisions.
 - **WS2: Protocol Engine & Risk Management**: Implements the ATR-based risk management system with 4-level protocol escalation for wealth protection.
@@ -30,6 +30,8 @@ The True-Asset-ALLUSE system is composed of six interconnected workstreams:
 - **WS4: Market Data & Execution Engine**: Provides real-time market data, Interactive Brokers integration, and position management for wealth operations.
 - **WS5: Portfolio Management & Analytics**: Implements portfolio optimization, performance measurement, and risk management for wealth growth.
 - **WS6: User Interface & API Layer**: Provides the user-facing components, including the API gateway, web dashboard, and wealth monitoring interface.
+- **WS7: Natural Language Interface & Chatbot**: GPT-4 powered conversational interface and automated report narration system with strict Constitution v1.3 compliance.
+- **WS8: Machine Learning & Intelligence Engine**: Advanced analytics, pattern recognition, and anomaly detection providing advisory insights while maintaining zero AI involvement in wealth management decisions.
 
 ![System Architecture Diagram](system_architecture.png)
 
@@ -108,4 +110,82 @@ The system implements a multi-layered security architecture:
 ## 8. Conclusion
 
 The True-Asset-ALLUSE system architecture is designed to be a robust, scalable, and compliant platform for automated trading. Its modular design, comprehensive features, and focus on security and resilience make it a powerful tool for professional traders and investment managers.
+
+
+
+### 4.7. WS7: Natural Language Interface & Chatbot
+
+**Components**:
+- **Wealth Chatbot**: GPT-4 powered conversational interface for system queries and commands
+- **Natural Language Query Parser**: Intent recognition and command routing system
+- **System Knowledge Base**: Comprehensive True-Asset-ALLUSE system information repository
+- **Narrative Generator**: Automated report narration and explanation system
+- **Constitution Compliance Filter**: Ensures all AI-generated content complies with Constitution v1.3
+- **Conversation Manager**: Multi-turn conversation context and session management
+- **Authentication & Authorization**: Secure user access control and permission management
+
+**Key Features**:
+- Zero decision-making authority - purely informational interface
+- Real-time system status queries and performance explanations
+- Automated report narration with customizable styles
+- Multi-language support capability
+- Complete audit trail of all AI interactions
+- Rate limiting and abuse prevention mechanisms
+
+### 4.8. WS8: Machine Learning & Intelligence Engine
+
+**Components**:
+- **Intelligence Coordinator**: Central orchestrator managing all ML components and generating unified intelligence reports
+- **Adaptive Learning Engine**: Learns from historical patterns, week types, and system performance to identify relationships and trends
+- **Market Anomaly Detector**: Real-time detection of unusual market behavior and system performance deviations using statistical and ML methods
+- **Pattern Recognition Engine**: Identifies recurring market patterns, regimes, and seasonal effects using clustering and time series analysis
+- **Predictive Analytics Engine**: Provides advisory forecasts for key metrics using time series models and regression techniques
+- **Data Processing Utilities**: Comprehensive data processing, feature extraction, and model validation utilities
+
+**Key Features**:
+- Advisory insights only - zero involvement in wealth management decisions
+- Real-time anomaly detection with severity classification (Low/Medium/High/Critical)
+- Pattern recognition for market conditions and regimes
+- Predictive analytics with confidence scoring and prediction intervals
+- Adaptive learning that improves over time with more data
+- Comprehensive model validation and performance tracking
+- Full Constitution v1.3 compliance with complete audit trails
+
+**ML Models & Techniques**:
+- **Isolation Forest**: Unsupervised anomaly detection for market and system data
+- **Random Forest**: Classification for week type prediction and risk assessment
+- **Gradient Boosting**: Regression for performance forecasting
+- **DBSCAN Clustering**: Pattern identification and market regime detection
+- **ARIMA Models**: Time series forecasting for predictive analytics
+- **Statistical Analysis**: Baseline calculation and deviation detection
+
+## 5. Enhanced System Integration
+
+With the addition of WS7 and WS8, the system now provides:
+
+### 5.1. Intelligence Layer
+- **WS8** continuously analyzes all system data to identify patterns, anomalies, and trends
+- Provides advisory insights that enhance understanding without influencing decisions
+- Generates comprehensive intelligence reports for system operators
+
+### 5.2. Communication Layer  
+- **WS7** provides natural language interface for human-system interaction
+- Translates complex system information into understandable narratives
+- Enables conversational queries about system status and performance
+
+### 5.3. Compliance Integration
+- Both WS7 and WS8 maintain strict Constitution v1.3 compliance
+- All AI-generated content is clearly marked as advisory/informational
+- Complete audit trails ensure transparency and regulatory compliance
+
+### 5.4. Data Flow Enhancement
+```
+Market Data → WS4 → WS2 (Risk) → WS1 (Rules) → Wealth Decisions
+     ↓           ↓        ↓           ↓
+   WS8 (Intelligence Analysis) → WS7 (NL Interface) → Users
+     ↓                              ↓
+   WS3 (Accounts) ← WS5 (Portfolio) ← WS6 (UI)
+```
+
+The enhanced architecture maintains the core principle of 100% rules-based wealth management while adding sophisticated intelligence and communication capabilities that improve system understanding and user experience.
 
