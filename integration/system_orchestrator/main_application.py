@@ -1,8 +1,8 @@
 """
 True-Asset-ALLUSE System Orchestrator
 
-This module implements the main system orchestrator that integrates all six
-workstreams (WS1-WS6) into a unified, production-ready system.
+This module implements the main system orchestrator that integrates all eight
+workstreams (WS1-WS8) into a unified, production-ready system.
 """
 
 import asyncio
@@ -27,6 +27,9 @@ from src.ws4_market_data_execution.execution_engine.trade_execution_engine impor
 from src.ws4_market_data_execution.execution_engine.liquidity_validator import LiquidityValidator
 from src.ws5_portfolio_management.optimization.portfolio_optimizer import PortfolioOptimizer
 from src.ws6_user_interface.api_gateway.api_gateway import APIGateway
+from src.ws7_natural_language.chatbot.wealth_chatbot import WealthChatbot
+from src.ws7_natural_language.report_narrator.narrative_generator import NarrativeGenerator
+from src.ws8_ml_intelligence.intelligence_coordinator import IntelligenceCoordinator
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +38,7 @@ class TrueAssetAllUseSystem:
     """
     Main system orchestrator that integrates all workstreams.
     
-    This class coordinates the interaction between all six workstreams to provide
+    This class coordinates the interaction between all eight workstreams to provide
     a unified, Constitution v1.3 compliant trading system.
     """
     
@@ -109,6 +112,17 @@ class TrueAssetAllUseSystem:
                 self.portfolio_optimizer
             )
             logger.info("WS6: User Interface initialized")
+            
+            # WS7: Natural Language Interface & Chatbot
+            self.wealth_chatbot = WealthChatbot()
+            self.narrative_generator = NarrativeGenerator()
+            logger.info("WS7: Natural Language Interface initialized")
+            
+            # WS8: Machine Learning & Intelligence Engine
+            self.intelligence_coordinator = IntelligenceCoordinator(
+                self.rules_engine.audit_manager
+            )
+            logger.info("WS8: ML Intelligence Engine initialized")
             
             # Initialize Constitution v1.3 compliance validation
             self._validate_constitution_compliance()
@@ -344,7 +358,9 @@ class TrueAssetAllUseSystem:
                 "ws3_account_management": "ACTIVE",
                 "ws4_market_data_execution": "ACTIVE",
                 "ws5_portfolio_management": "ACTIVE",
-                "ws6_user_interface": "ACTIVE"
+                "ws6_user_interface": "ACTIVE",
+                "ws7_natural_language": "ACTIVE",
+                "ws8_ml_intelligence": "ACTIVE"
             }
         }
 
@@ -440,7 +456,10 @@ if __name__ == "__main__":
             "liquidity_validator": self.liquidity_validator,
             "execution_engine": self.execution_engine,
             "portfolio_optimizer": self.portfolio_optimizer,
-            "api_gateway": self.api_gateway
+            "api_gateway": self.api_gateway,
+            "wealth_chatbot": self.wealth_chatbot,
+            "narrative_generator": self.narrative_generator,
+            "intelligence_coordinator": self.intelligence_coordinator
         }
         
         return component_map.get(component_name)
