@@ -1,4 +1,6 @@
-# Default values for true-asset-alluse
+# True-Asset-ALLUSE Intelligent System Helm Values v2.0
+# Enhanced configuration for 11-workstream AI-enabled deployment
+
 replicaCount: 3
 
 image:
@@ -24,7 +26,7 @@ securityContext:
   capabilities:
     drop:
     - ALL
-  readOnlyRootFilesystem: true
+  readOnlyRootFilesystem: false  # Changed for AI workloads
   runAsNonRoot: true
   runAsUser: 1000
 
@@ -39,8 +41,14 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"  # For voice uploads
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"  # For AI processing
   hosts:
     - host: api.trueassetalluse.com
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: app.trueassetalluse.com  # PWA frontend
       paths:
         - path: /
           pathType: Prefix
@@ -48,29 +56,200 @@ ingress:
     - secretName: trueassetalluse-tls
       hosts:
         - api.trueassetalluse.com
+        - app.trueassetalluse.com
 
+# Enhanced resource allocation for AI workloads
 resources:
   limits:
+    cpu: 4000m
+    memory: 8Gi
+  requests:
     cpu: 2000m
     memory: 4Gi
-  requests:
-    cpu: 1000m
-    memory: 2Gi
 
+# AI-aware autoscaling
 autoscaling:
   enabled: true
   minReplicas: 3
-  maxReplicas: 10
+  maxReplicas: 15
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 80
+  # Custom metrics for AI workloads
+  customMetrics:
+    - type: Pods
+      pods:
+        metric:
+          name: ai_inference_queue_length
+        target:
+          type: AverageValue
+          averageValue: "10"
 
 nodeSelector: {}
 
 tolerations: []
 
-affinity: {}
+affinity:
+  # Prefer nodes with GPU for AI workloads
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      preference:
+        matchExpressions:
+        - key: node-type
+          operator: In
+          values:
+          - gpu
 
-# Environment variables
+# AI Configuration
+ai:
+  enabled: true
+  gpu:
+    enabled: true
+    resources:
+      limits:
+        nvidia.com/gpu: 1
+      requests:
+        nvidia.com/gpu: 1
+  voice:
+    enabled: true
+    languages: "en,es,fr,de,ja,zh,pt,it"
+  models:
+    # Model endpoints and configurations
+    sentiment:
+      endpoint: "sentiment-model-serving:8080"
+      timeout: 30
+    conversation:
+      endpoint: "conversation-model-serving:8080"
+      timeout: 60
+    voice:
+      tts_endpoint: "tts-service:8080"
+      stt_endpoint: "stt-service:8080"
+
+# Workstream Configuration
+workstreams:
+  # Core Foundation (WS1-WS6)
+  ws1:
+    enabled: true
+    replicas: 2
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+  ws2:
+    enabled: true
+    replicas: 2
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+  ws3:
+    enabled: true
+    replicas: 2
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+  ws4:
+    enabled: true
+    replicas: 3  # Higher for market data processing
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 2Gi
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+  ws5:
+    enabled: true
+    replicas: 2
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 2Gi
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+  ws6:
+    enabled: true
+    replicas: 3  # Higher for user interface
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+  
+  # Intelligence Layer (WS7-WS8)
+  ws7:
+    enabled: true
+    replicas: 3
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 2Gi
+        nvidia.com/gpu: 0
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+        nvidia.com/gpu: 1
+  ws8:
+    enabled: true
+    replicas: 2
+    resources:
+      requests:
+        cpu: 2000m
+        memory: 4Gi
+        nvidia.com/gpu: 1
+      limits:
+        cpu: 4000m
+        memory: 8Gi
+        nvidia.com/gpu: 1
+  
+  # Advanced AI (WS9, WS12, WS16)
+  ws9:
+    enabled: true
+    replicas: 2
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 2Gi
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+  ws12:
+    enabled: true
+    replicas: 2
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 2Gi
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+  ws16:
+    enabled: true
+    replicas: 3  # Higher for conversational load
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 2Gi
+        nvidia.com/gpu: 0
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+        nvidia.com/gpu: 1
+
+# Enhanced environment variables
 env:
   - name: ENVIRONMENT
     value: "production"
@@ -86,58 +265,175 @@ env:
       secretKeyRef:
         name: redis-secret
         key: url
+  # AI Service Configuration
+  - name: OPENAI_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: ai-secrets
+        key: openai-api-key
+  - name: OPENAI_API_BASE
+    valueFrom:
+      secretKeyRef:
+        name: ai-secrets
+        key: openai-api-base
+  - name: ANTHROPIC_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: ai-secrets
+        key: anthropic-api-key
+  # Voice Services
+  - name: AWS_POLLY_REGION
+    value: "us-east-1"
+  - name: AWS_TRANSCRIBE_REGION
+    value: "us-east-1"
+  - name: VOICE_LANGUAGES
+    value: "en,es,fr,de,ja,zh,pt,it"
+  # Market Intelligence
+  - name: NEWS_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: market-secrets
+        key: news-api-key
+  - name: SENTIMENT_MODEL_ENDPOINT
+    value: "http://sentiment-model-serving:8080"
+  # Conversational AI
+  - name: CONVERSATION_MEMORY_TTL
+    value: "86400"
+  - name: MAX_CONVERSATION_HISTORY
+    value: "100"
+  - name: SUPPORTED_LANGUAGES
+    value: "en,es,fr,de,ja,zh,pt,it"
 
-# Database configuration
+# Database configuration with AI extensions
 database:
   host: ""  # Will be set during deployment
   port: 5432
   name: "trueassetalluse"
   username: "postgres"
   password: ""  # Will be set from secret
+  extensions:
+    - "vector"  # For AI embeddings
+    - "pg_stat_statements"  # For performance monitoring
 
-# Redis configuration
+# Enhanced Redis configuration
 redis:
   host: ""  # Will be set during deployment
   port: 6379
+  # Multiple Redis instances for different purposes
+  instances:
+    cache:
+      db: 0
+      maxmemory: "2gb"
+      maxmemory_policy: "allkeys-lru"
+    sessions:
+      db: 1
+      maxmemory: "1gb"
+      maxmemory_policy: "volatile-ttl"
+    ai_cache:
+      db: 2
+      maxmemory: "4gb"
+      maxmemory_policy: "allkeys-lfu"
 
-# Monitoring
+# Enhanced monitoring with AI metrics
 monitoring:
   enabled: true
   serviceMonitor:
     enabled: true
     interval: 30s
     path: /metrics
+  # AI-specific metrics
+  aiMetrics:
+    enabled: true
+    endpoints:
+      - path: /ai/metrics
+        port: ai-metrics
+      - path: /conversation/metrics
+        port: conversation-metrics
+      - path: /voice/metrics
+        port: voice-metrics
 
-# Health checks
+# Enhanced health checks
 livenessProbe:
   httpGet:
     path: /health
     port: http
-  initialDelaySeconds: 30
+  initialDelaySeconds: 60  # Longer for AI model loading
   periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
 
 readinessProbe:
   httpGet:
     path: /ready
     port: http
-  initialDelaySeconds: 5
+  initialDelaySeconds: 30  # Longer for AI initialization
   periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
 
-# Persistence
+# AI-specific health checks
+aiHealthChecks:
+  enabled: true
+  probes:
+    - name: ai-models
+      path: /ai/health
+      initialDelaySeconds: 120
+    - name: conversation
+      path: /conversation/health
+      initialDelaySeconds: 60
+    - name: voice-services
+      path: /voice/health
+      initialDelaySeconds: 90
+
+# Enhanced persistence for AI data
 persistence:
   enabled: true
   storageClass: "gp3"
   accessMode: ReadWriteOnce
-  size: 10Gi
+  size: 50Gi  # Larger for AI models and data
+  # Additional volumes for AI workloads
+  aiModels:
+    enabled: true
+    size: 100Gi
+    storageClass: "gp3"
+    accessMode: ReadWriteMany
+  conversationData:
+    enabled: true
+    size: 20Gi
+    storageClass: "gp3"
+    accessMode: ReadWriteOnce
 
-# ConfigMap data
+# Enhanced ConfigMap data
 config:
+  # Core system configuration
   constitution_version: "1.3"
   max_positions: 50
   risk_tolerance: "medium"
   trading_hours: "09:30-16:00"
+  
+  # AI configuration
+  ai_enabled: true
+  ai_models:
+    sentiment_analysis: "enabled"
+    conversation: "enabled"
+    voice_processing: "enabled"
+    market_intelligence: "enabled"
+    visualization: "enabled"
+  
+  # Multi-language configuration
+  default_language: "en"
+  supported_languages: "en,es,fr,de,ja,zh,pt,it"
+  
+  # Voice configuration
+  voice_enabled: true
+  voice_languages: "en,es,fr,de,ja,zh,pt,it"
+  
+  # PWA configuration
+  pwa_enabled: true
+  offline_support: true
+  push_notifications: true
 
-# Secrets (will be created separately)
+# Enhanced secrets configuration
 secrets:
   database:
     url: ""
@@ -145,5 +441,83 @@ secrets:
     url: ""
   api_keys:
     interactive_brokers: ""
+    alpaca: ""
+    databento: ""
     market_data: ""
+  ai_services:
+    openai_api_key: ""
+    openai_api_base: ""
+    anthropic_api_key: ""
+    aws_access_key: ""
+    aws_secret_key: ""
+  market_intelligence:
+    news_api_key: ""
+    sentiment_api_key: ""
+  voice_services:
+    aws_polly_key: ""
+    aws_transcribe_key: ""
+
+# Progressive Web App configuration
+pwa:
+  enabled: true
+  manifest:
+    name: "True-Asset-ALLUSE"
+    short_name: "TrueAsset"
+    description: "Autopilot for Wealth.....Engineered for compounding income and corpus"
+    theme_color: "#1976d2"
+    background_color: "#ffffff"
+    display: "standalone"
+    start_url: "/"
+    scope: "/"
+  serviceWorker:
+    enabled: true
+    cacheStrategy: "networkFirst"
+  notifications:
+    enabled: true
+    vapidPublicKey: ""  # Will be set during deployment
+
+# Network policies for security
+networkPolicies:
+  enabled: true
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            name: ingress-nginx
+      ports:
+      - protocol: TCP
+        port: 8000
+  egress:
+    - to: []  # Allow all egress (can be restricted)
+      ports:
+      - protocol: TCP
+        port: 443  # HTTPS
+      - protocol: TCP
+        port: 80   # HTTP
+      - protocol: TCP
+        port: 5432 # PostgreSQL
+      - protocol: TCP
+        port: 6379 # Redis
+
+# Backup configuration
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  retention: "30d"
+  destinations:
+    - type: s3
+      bucket: "trueasset-backups"
+      region: "us-east-1"
+
+# Disaster recovery
+disasterRecovery:
+  enabled: true
+  replication:
+    enabled: true
+    regions:
+      - "us-west-2"
+      - "eu-west-1"
+  backup:
+    crossRegion: true
+    encryption: true
 

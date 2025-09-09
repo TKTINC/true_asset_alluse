@@ -1,0 +1,149 @@
+# Default values for true-asset-alluse
+replicaCount: 3
+
+image:
+  repository: ""  # Will be set during deployment
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: api.trueassetalluse.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: trueassetalluse-tls
+      hosts:
+        - api.trueassetalluse.com
+
+resources:
+  limits:
+    cpu: 2000m
+    memory: 4Gi
+  requests:
+    cpu: 1000m
+    memory: 2Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Environment variables
+env:
+  - name: ENVIRONMENT
+    value: "production"
+  - name: LOG_LEVEL
+    value: "INFO"
+  - name: DATABASE_URL
+    valueFrom:
+      secretKeyRef:
+        name: database-secret
+        key: url
+  - name: REDIS_URL
+    valueFrom:
+      secretKeyRef:
+        name: redis-secret
+        key: url
+
+# Database configuration
+database:
+  host: ""  # Will be set during deployment
+  port: 5432
+  name: "trueassetalluse"
+  username: "postgres"
+  password: ""  # Will be set from secret
+
+# Redis configuration
+redis:
+  host: ""  # Will be set during deployment
+  port: 6379
+
+# Monitoring
+monitoring:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    path: /metrics
+
+# Health checks
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 5
+
+# Persistence
+persistence:
+  enabled: true
+  storageClass: "gp3"
+  accessMode: ReadWriteOnce
+  size: 10Gi
+
+# ConfigMap data
+config:
+  constitution_version: "1.3"
+  max_positions: 50
+  risk_tolerance: "medium"
+  trading_hours: "09:30-16:00"
+
+# Secrets (will be created separately)
+secrets:
+  database:
+    url: ""
+  redis:
+    url: ""
+  api_keys:
+    interactive_brokers: ""
+    market_data: ""
+
