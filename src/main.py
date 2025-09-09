@@ -2,7 +2,9 @@
 True-Asset-ALLUSE Main Application
 
 FastAPI application entry point for the True-Asset-ALLUSE system.
-Implements the Constitutional framework with 6 workstreams.
+Implements the Constitutional framework with 11 workstreams including
+advanced AI capabilities for market intelligence, visualization, and
+enhanced conversational interfaces.
 """
 
 import logging
@@ -66,7 +68,7 @@ async def lifespan(app: FastAPI):
 # Create FastAPI application
 app = FastAPI(
     title="True-Asset-ALLUSE",
-    description="Rules-Based Autonomous Trading System - Constitution v1.3 Compliant",
+    description="Intelligent Rules-Based Autonomous Trading System - Constitution v1.3 Compliant with Advanced AI Capabilities",
     version=settings.app_version,
     docs_url="/docs" if settings.debug else None,
     redoc_url="/redoc" if settings.debug else None,
