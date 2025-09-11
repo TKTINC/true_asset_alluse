@@ -86,12 +86,57 @@ STOP_SCRIPT="stop_server.sh"
 
 echo_info "Creating start and stop scripts..."
 
-# Start Script
+# Start Script (Updated to use new production code approach)
 cat << EOF > ${START_SCRIPT}
 #!/bin/bash
+# True-Asset-ALLUSE Local Deployment Start Script
+# Supports both mock and live modes
+
+# Default mode
+MODE="mock"
+
+# Parse command line arguments
+if [ "\$1" = "live" ]; then
+    MODE="live"
+elif [ "\$1" = "mock" ]; then
+    MODE="mock"
+elif [ ! -z "\$1" ]; then
+    echo "Usage: \$0 [mock|live]"
+    echo "  mock - Use mock data for demonstration (default)"
+    echo "  live - Connect to real services (requires API keys)"
+    exit 1
+fi
+
+# Check if virtual environment exists
+if [ ! -d "${VENV_DIR}" ]; then
+    echo "❌ Virtual environment not found. Please run ./setup_macos_enhanced.sh first."
+    exit 1
+fi
+
+# Activate virtual environment
+echo "🔄 Activating virtual environment..."
 source ${VENV_DIR}/bin/activate
-echo "Starting True-Asset-ALLUSE Enhanced Local Server..."
-python main_enhanced.py
+
+# Load environment variables if in live mode
+if [ "\$MODE" = "live" ]; then
+    if [ -f ".env.local" ]; then
+        echo "🔑 Loading API keys from .env.local..."
+        export \$(cat .env.local | grep -v '^#' | xargs)
+    else
+        echo "⚠️  Warning: .env.local file not found. Live mode may not work properly."
+        echo "💡 Create .env.local with your API keys or run in mock mode."
+    fi
+fi
+
+echo "🚀 Starting True-Asset-ALLUSE in \$MODE mode..."
+echo "📊 Dashboard: http://127.0.0.1:8000/demo"
+echo "📚 API Docs: http://127.0.0.1:8000/docs"
+echo ""
+echo "Press Ctrl+C to stop the server"
+echo ""
+
+# Start the application using production code
+python local_main.py --mode \$MODE
 EOF
 chmod +x ${START_SCRIPT}
 
@@ -99,7 +144,7 @@ chmod +x ${START_SCRIPT}
 cat << EOF > ${STOP_SCRIPT}
 #!/bin/bash
 echo "Stopping True-Asset-ALLUSE Server..."
-pkill -f "python main_enhanced.py"
+pkill -f "python local_main.py"
 echo "Server stopped."
 EOF
 chmod +x ${STOP_SCRIPT}
@@ -111,12 +156,20 @@ echo_info "-----------------------------------------------------"
 echo_success "Setup complete!"
 echo_info ""
 echo_info "Next Steps:"
-echo_info "1. Edit the .env.local file and add your API keys."
-echo_info "2. Make sure Interactive Brokers TWS is running on your machine."
-echo_info "3. Run ./start_server.sh to launch the application."
-echo_info "4. Open http://127.0.0.1:8000 in your browser."
+echo_info "1. For MOCK MODE (no API keys needed):"
+echo_info "   ./start_server.sh mock"
 echo_info ""
-echo_info "To stop the server, run ./stop_server.sh"
+echo_info "2. For LIVE MODE (requires API keys):"
+echo_info "   - Edit .env.local and add your API keys"
+echo_info "   - Make sure Interactive Brokers TWS is running"
+echo_info "   - Run: ./start_server.sh live"
+echo_info ""
+echo_info "3. Open http://127.0.0.1:8000/demo in your browser"
+echo_info ""
+echo_info "This uses the ACTUAL production code from src/ directory"
+echo_info "Investors see the real True-Asset-ALLUSE system!"
+echo_info ""
+echo_info "To stop the server, press Ctrl+C or run ./stop_server.sh"
 echo_info "-----------------------------------------------------"
 
 
