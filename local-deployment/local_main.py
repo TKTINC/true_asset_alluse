@@ -315,18 +315,39 @@ def main():
         print(f"🚀 Starting server on http://{local_settings.api_host}:{local_settings.api_port}")
         print(f"📊 Demo Dashboard: http://{local_settings.api_host}:{local_settings.api_port}/demo")
         print(f"📚 API Docs: http://{local_settings.api_host}:{local_settings.api_port}/docs")
+        print("")
+        print("Press Ctrl+C to stop the server")
+        print("")
         
+        # Run the server with proper configuration
         uvicorn.run(
             app,
             host=local_settings.api_host,
             port=local_settings.api_port,
-            reload=local_settings.debug,
-            log_level=local_settings.log_level.lower()
+            reload=False,  # Disable reload to avoid import string issues
+            log_level="info",
+            access_log=True
         )
         
     except Exception as e:
         print(f"❌ Error starting server: {e}")
-        sys.exit(1)
+        print("💡 Trying alternative server startup...")
+        
+        # Alternative startup method
+        try:
+            import uvicorn
+            config = uvicorn.Config(
+                app=app,
+                host=local_settings.api_host,
+                port=local_settings.api_port,
+                log_level="info"
+            )
+            server = uvicorn.Server(config)
+            server.run()
+        except Exception as e2:
+            print(f"❌ Alternative startup also failed: {e2}")
+            print("💡 Please check if port 8000 is already in use")
+            sys.exit(1)
 
 if __name__ == "__main__":
     main()
