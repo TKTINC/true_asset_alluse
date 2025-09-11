@@ -9,13 +9,34 @@ import os
 import argparse
 from pathlib import Path
 
-# Add local deployment directory to Python path
-local_path = Path(__file__).parent
-sys.path.insert(0, str(local_path))
+# Get the absolute paths
+local_path = Path(__file__).parent.absolute()
+project_root = local_path.parent.absolute()
+src_path = project_root / "src"
 
-# Add src directory to Python path for production code imports
-src_path = local_path.parent / "src"
+# Debug path information
+print(f"🔍 Local path: {local_path}")
+print(f"🔍 Project root: {project_root}")
+print(f"🔍 Src path: {src_path}")
+print(f"🔍 Src exists: {src_path.exists()}")
+
+# Add paths to Python path
+sys.path.insert(0, str(local_path))
+sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(src_path))
+
+# Verify src directory structure
+if src_path.exists():
+    print(f"✅ Found src directory")
+    main_py = src_path / "main.py"
+    if main_py.exists():
+        print(f"✅ Found src/main.py")
+    else:
+        print(f"❌ src/main.py not found")
+        print(f"📁 Contents of src/: {list(src_path.iterdir()) if src_path.exists() else 'N/A'}")
+else:
+    print(f"❌ src directory not found at {src_path}")
+    print(f"📁 Contents of project root: {list(project_root.iterdir())}")
 
 # Set environment variables for local deployment
 os.environ["TRUE_ASSET_LOCAL_DEPLOYMENT"] = "true"
@@ -71,9 +92,17 @@ def setup_local_environment(mode: str = "mock"):
 def patch_production_code_for_local(mode: str):
     """Patch production code to work with local deployment"""
     
-    # Patch the settings module to use local settings
+    # Try to import production settings
     try:
-        from src.common import config
+        # Try different import approaches
+        try:
+            from src.common import config
+            print("✅ Successfully imported src.common.config")
+        except ImportError:
+            # Try importing from the project root
+            import common.config as config
+            print("✅ Successfully imported common.config")
+        
         from local_config import get_local_settings, get_mock_data
         
         local_settings = get_local_settings(mode)
@@ -90,18 +119,12 @@ def patch_production_code_for_local(mode: str):
         config.get_settings = lambda: LocalSettingsAdapter(local_settings)
         
         print(f"✅ Patched production settings for {mode} mode")
+        return True
         
     except ImportError as e:
         print(f"⚠️  Warning: Could not patch production settings: {e}")
-    
-    # Patch workstreams to use mock data in mock mode
-    if mode == "mock":
-        try:
-            # This would patch the workstreams to return mock data
-            # Implementation depends on the specific workstream structure
-            print("✅ Configured workstreams for mock mode")
-        except Exception as e:
-            print(f"⚠️  Warning: Could not configure mock mode: {e}")
+        print(f"💡 Will run in simplified local mode")
+        return False
 
 def main():
     """Main entry point for local deployment"""
@@ -142,36 +165,156 @@ def main():
     patch_production_code_for_local(args.mode)
     
     # Import and run the production application
+    production_import_success = False
     try:
-        print("🔄 Starting production application with local configuration...")
+        print("🔄 Attempting to import production application...")
         
-        # Import the production main module
-        from src.main import app
+        # Try different import approaches
+        try:
+            from src.main import app
+            print("✅ Successfully imported production app from src.main")
+            production_import_success = True
+        except ImportError:
+            try:
+                import main
+                app = main.app
+                print("✅ Successfully imported production app from main")
+                production_import_success = True
+            except ImportError:
+                print("❌ Could not import production application")
+                production_import_success = False
         
-        # Add local routes for demo purposes
-        from fastapi import Request
-        from fastapi.responses import HTMLResponse
-        from fastapi.templating import Jinja2Templates
-        
-        # Setup templates for local deployment
-        templates = Jinja2Templates(directory=str(local_path / "templates"))
-        
-        @app.get("/demo", response_class=HTMLResponse)
-        async def demo_dashboard(request: Request):
-            """Local demo dashboard"""
-            return templates.TemplateResponse("index_enhanced.html", {"request": request})
-        
-        # Add mock data endpoints for demo mode
-        if args.mode == "mock":
-            from local_config import get_mock_data
+        if production_import_success:
+            # Add local routes for demo purposes
+            from fastapi import Request
+            from fastapi.responses import HTMLResponse, JSONResponse
             
-            @app.get("/api/v1/local/mock-data")
-            async def get_local_mock_data():
-                """Get mock data for demo"""
-                return get_mock_data()
+            @app.get("/demo", response_class=HTMLResponse)
+            async def demo_dashboard(request: Request):
+                """Local demo dashboard"""
+                return """
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>True-Asset-ALLUSE Local Demo</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+                        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+                        .header { text-align: center; margin-bottom: 30px; }
+                        .status { background: #e8f5e8; padding: 20px; border-radius: 5px; margin: 20px 0; }
+                        .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; }
+                        .metric { background: #f8f9fa; padding: 20px; border-radius: 5px; text-align: center; }
+                        .metric h3 { margin: 0 0 10px 0; color: #333; }
+                        .metric .value { font-size: 24px; font-weight: bold; color: #007bff; }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="header">
+                            <h1>🚀 True-Asset-ALLUSE</h1>
+                            <h2>Intelligent Wealth Management System</h2>
+                            <p>Running in """ + args.mode.upper() + """ mode</p>
+                        </div>
+                        
+                        <div class="status">
+                            <h3>✅ System Status: Active</h3>
+                            <p>Production code successfully loaded and running locally</p>
+                        </div>
+                        
+                        <div class="metrics">
+                            <div class="metric">
+                                <h3>Portfolio Value</h3>
+                                <div class="value">$1,247,850</div>
+                            </div>
+                            <div class="metric">
+                                <h3>Daily P&L</h3>
+                                <div class="value">+$12,450</div>
+                            </div>
+                            <div class="metric">
+                                <h3>Active Positions</h3>
+                                <div class="value">8</div>
+                            </div>
+                            <div class="metric">
+                                <h3>System Health</h3>
+                                <div class="value">100%</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 30px; text-align: center;">
+                            <p><strong>API Documentation:</strong> <a href="/docs">/docs</a></p>
+                            <p><strong>Health Check:</strong> <a href="/health">/health</a></p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+                """
+            
+            # Add mock data endpoints for demo mode
+            if args.mode == "mock":
+                from local_config import get_mock_data
+                
+                @app.get("/api/v1/local/mock-data")
+                async def get_local_mock_data():
+                    """Get mock data for demo"""
+                    return get_mock_data()
         
-        # Start the server
+    except Exception as e:
+        print(f"❌ Error setting up production application: {e}")
+        production_import_success = False
+    
+    # Fallback: Create a simple FastAPI app if production import fails
+    if not production_import_success:
+        print("🔄 Creating fallback local application...")
+        try:
+            from fastapi import FastAPI, Request
+            from fastapi.responses import HTMLResponse, JSONResponse
+            
+            app = FastAPI(
+                title="True-Asset-ALLUSE Local Demo",
+                description="Local demonstration of True-Asset-ALLUSE system",
+                version="1.0.0-local"
+            )
+            
+            @app.get("/", response_class=HTMLResponse)
+            async def root():
+                return """
+                <h1>True-Asset-ALLUSE Local Demo</h1>
+                <p>Running in fallback mode</p>
+                <p><a href="/demo">Demo Dashboard</a></p>
+                <p><a href="/docs">API Documentation</a></p>
+                """
+            
+            @app.get("/demo", response_class=HTMLResponse)
+            async def demo_dashboard():
+                return """
+                <!DOCTYPE html>
+                <html>
+                <head><title>True-Asset-ALLUSE Demo</title></head>
+                <body>
+                    <h1>True-Asset-ALLUSE Demo</h1>
+                    <p>This is a simplified local demo running in fallback mode.</p>
+                    <p>The production code could not be imported, but this demonstrates the concept.</p>
+                </body>
+                </html>
+                """
+            
+            @app.get("/health")
+            async def health():
+                return {"status": "healthy", "mode": "local-fallback"}
+            
+            print("✅ Fallback application created successfully")
+            
+        except Exception as e:
+            print(f"❌ Error creating fallback application: {e}")
+            sys.exit(1)
+    
+    # Start the server
+    try:
         import uvicorn
+        
+        print(f"🚀 Starting server on http://{local_settings.api_host}:{local_settings.api_port}")
+        print(f"📊 Demo Dashboard: http://{local_settings.api_host}:{local_settings.api_port}/demo")
+        print(f"📚 API Docs: http://{local_settings.api_host}:{local_settings.api_port}/docs")
         
         uvicorn.run(
             app,
@@ -181,12 +324,8 @@ def main():
             log_level=local_settings.log_level.lower()
         )
         
-    except ImportError as e:
-        print(f"❌ Error importing production code: {e}")
-        print("💡 Make sure you're running from the correct directory and all dependencies are installed")
-        sys.exit(1)
     except Exception as e:
-        print(f"❌ Error starting application: {e}")
+        print(f"❌ Error starting server: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
