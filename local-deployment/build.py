@@ -404,6 +404,19 @@ async def dashboard():
     total_value = sum(p["market_value"] for p in portfolio)
     total_pnl = sum(p["pnl"] for p in portfolio)
     
+    # Generate portfolio rows
+    portfolio_rows = ""
+    for p in portfolio:
+        portfolio_rows += f"""
+                        <tr>
+                            <td><strong>{p["symbol"]}</strong></td>
+                            <td>{p["quantity"]:.0f}</td>
+                            <td>${p["avg_price"]:.2f}</td>
+                            <td>${p["current_price"]:.2f}</td>
+                            <td>${p["market_value"]:.2f}</td>
+                            <td class="positive">${p["pnl"]:.2f}</td>
+                        </tr>"""
+    
     return f"""
     <!DOCTYPE html>
     <html>
@@ -470,17 +483,7 @@ async def dashboard():
                             <th>P&L</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {"".join([f'''
-                        <tr>
-                            <td><strong>{p["symbol"]}</strong></td>
-                            <td>{p["quantity"]:.0f}</td>
-                            <td>${p["avg_price"]:.2f}</td>
-                            <td>${p["current_price"]:.2f}</td>
-                            <td>${p["market_value"]:.2f}</td>
-                            <td class="positive">${p["pnl"]:.2f}</td>
-                        </tr>
-                        ''' for p in portfolio])}
+                    <tbody>{portfolio_rows}
                     </tbody>
                 </table>
             </div>
@@ -621,5 +624,4 @@ if __name__ == "__main__":
     success = builder.build()
     
     sys.exit(0 if success else 1)
-'''
 
