@@ -60,7 +60,7 @@ class Settings(BaseSettings):
     api_prefix: str = Field(default="/api/v1", env="API_PREFIX")
     
     # Database Configuration
-    database_url: PostgresDsn = Field(
+    database_url: str = Field(
         default="postgresql://postgres:password@localhost:5432/true_asset_alluse",
         env="DATABASE_URL"
     )
