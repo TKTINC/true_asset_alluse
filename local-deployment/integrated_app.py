@@ -63,10 +63,63 @@ app.add_middleware(
 templates = Jinja2Templates(directory=str(dist_dir / "templates"))
 
 # Database helper functions
+def ensure_database_exists():
+    """Ensure database exists and create it if it doesn't."""
+    db_path = Path(__file__).parent.parent / "database" / "true_asset_alluse.db"
+    
+    if not db_path.exists():
+        print("🗄️  Database not found, creating...")
+        # Create database directory
+        db_path.parent.mkdir(exist_ok=True)
+        
+        # Create and populate database
+        conn = sqlite3.connect(str(db_path))
+        cursor = conn.cursor()
+        
+        # Create portfolio table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS portfolio (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                symbol TEXT NOT NULL,
+                quantity REAL NOT NULL,
+                avg_price REAL NOT NULL,
+                current_price REAL NOT NULL,
+                market_value REAL NOT NULL,
+                pnl REAL NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        
+        # Sample portfolio data
+        portfolio_data = [
+            ("GOOGL", 50, 2800.00, 3100.00, 155000, 15000),
+            ("NVDA", 100, 450.00, 520.00, 52000, 7000),
+            ("TSLA", 80, 250.00, 290.00, 23200, 3200),
+            ("AAPL", 200, 180.00, 195.00, 39000, 3000),
+            ("MSFT", 150, 350.00, 380.00, 57000, 4500),
+            ("AMZN", 30, 3200.00, 3400.00, 102000, 6000),
+            ("META", 60, 320.00, 350.00, 21000, 1800),
+            ("NFLX", 40, 400.00, 450.00, 18000, 2000),
+            ("AMD", 120, 100.00, 115.00, 13800, 1800),
+            ("CRM", 50, 220.00, 240.00, 12000, 1000)
+        ]
+        
+        cursor.executemany("""
+            INSERT INTO portfolio (symbol, quantity, avg_price, current_price, market_value, pnl)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, portfolio_data)
+        
+        conn.commit()
+        conn.close()
+        print("✅ Database created and populated with sample data")
+    
+    return str(db_path)
+
 def get_db_connection():
     """Get database connection."""
-    db_path = Path(__file__).parent.parent / "database" / "true_asset_alluse.db"
-    return sqlite3.connect(str(db_path))
+    db_path = ensure_database_exists()
+    return sqlite3.connect(db_path)
 
 def get_portfolio_data():
     """Get portfolio data from database."""
