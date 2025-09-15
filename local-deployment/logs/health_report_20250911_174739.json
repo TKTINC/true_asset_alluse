@@ -1,0 +1,141 @@
+{
+  "health_check_info": {
+    "timestamp": "2025-09-11T17:47:39.913533",
+    "mode": "mock",
+    "base_url": "http://127.0.0.1:8000",
+    "config": {
+      "mode": "mock",
+      "build_id": "20250911_174431",
+      "database_path": "/home/ubuntu/true_asset_alluse/local-deployment/database/true_asset_alluse.db",
+      "host": "127.0.0.1",
+      "port": 8000,
+      "debug": true
+    }
+  },
+  "endpoint_health": {
+    "results": {
+      "/": {
+        "name": "Home Page",
+        "status": "healthy",
+        "status_code": 200,
+        "response_time": 0.0031092166900634766,
+        "content_length": 1802
+      },
+      "/health": {
+        "name": "Health Check",
+        "status": "healthy",
+        "status_code": 200,
+        "response_time": 0.002171754837036133,
+        "content_length": 105
+      },
+      "/portfolio": {
+        "name": "Portfolio API",
+        "status": "healthy",
+        "status_code": 200,
+        "response_time": 0.0032837390899658203,
+        "content_length": 2217
+      },
+      "/dashboard": {
+        "name": "Dashboard",
+        "status": "healthy",
+        "status_code": 200,
+        "response_time": 0.0037326812744140625,
+        "content_length": 10483
+      },
+      "/api/v1/system/info": {
+        "name": "System Info API",
+        "status": "healthy",
+        "status_code": 200,
+        "response_time": 0.003356456756591797,
+        "content_length": 108
+      },
+      "/docs": {
+        "name": "API Documentation",
+        "status": "healthy",
+        "status_code": 200,
+        "response_time": 0.002877473831176758,
+        "content_length": 949
+      }
+    },
+    "summary": {
+      "total_endpoints": 6,
+      "healthy_endpoints": 6,
+      "health_percentage": 100.0
+    }
+  },
+  "database_health": {
+    "status": "healthy"
+  },
+  "performance_tests": {
+    "/": {
+      "avg_response_time": 0.0018321990966796875,
+      "max_response_time": 0.0027942657470703125,
+      "min_response_time": 0.0013222694396972656,
+      "requests_tested": 5,
+      "success_rate": 1.0
+    },
+    "/portfolio": {
+      "avg_response_time": 0.001980018615722656,
+      "max_response_time": 0.0021774768829345703,
+      "min_response_time": 0.0018315315246582031,
+      "requests_tested": 5,
+      "success_rate": 1.0
+    },
+    "/health": {
+      "avg_response_time": 0.0012916088104248046,
+      "max_response_time": 0.0013384819030761719,
+      "min_response_time": 0.0012302398681640625,
+      "requests_tested": 5,
+      "success_rate": 1.0
+    }
+  },
+  "overall_status": "healthy",
+  "check_log": [
+    "[17:47:36] [INFO] \ud83c\udfe5 Starting True-Asset-ALLUSE health check...",
+    "[17:47:36] [INFO] \ud83c\udfaf Mode: mock",
+    "[17:47:36] [INFO] ",
+    "[17:47:36] [INFO] \ud83d\udccb Loading application configuration...",
+    "[17:47:36] [INFO]    \u2705 Configuration loaded",
+    "[17:47:36] [INFO]    \ud83c\udf10 Base URL: http://127.0.0.1:8000",
+    "[17:47:36] [INFO]    \ud83c\udfaf Mode: mock",
+    "[17:47:37] [INFO] \ud83d\udd0d Checking if application is running...",
+    "[17:47:37] [INFO]    \u2705 Application is running and responding",
+    "[17:47:37] [INFO] \ud83c\udfe5 Running endpoint health checks...",
+    "[17:47:37] [INFO]    \ud83d\udd0d Testing Home Page (/)...",
+    "[17:47:37] [INFO]       \u2705 Home Page - Status: 200, Time: 0.003s",
+    "[17:47:37] [INFO]    \ud83d\udd0d Testing Health Check (/health)...",
+    "[17:47:37] [INFO]       \u2705 Health Check - Status: 200, Time: 0.002s",
+    "[17:47:37] [INFO]    \ud83d\udd0d Testing Portfolio API (/portfolio)...",
+    "[17:47:37] [INFO]       \u2705 Portfolio API - Status: 200, Time: 0.003s",
+    "[17:47:37] [INFO]    \ud83d\udd0d Testing Dashboard (/dashboard)...",
+    "[17:47:37] [INFO]       \u2705 Dashboard - Status: 200, Time: 0.004s",
+    "[17:47:37] [INFO]    \ud83d\udd0d Testing System Info API (/api/v1/system/info)...",
+    "[17:47:37] [INFO]       \u2705 System Info API - Status: 200, Time: 0.003s",
+    "[17:47:37] [INFO]    \ud83d\udd0d Testing API Documentation (/docs)...",
+    "[17:47:37] [INFO]       \u2705 API Documentation - Status: 200, Time: 0.003s",
+    "[17:47:37] [INFO]    \ud83d\udcca Health check summary: 6/6 endpoints healthy",
+    "[17:47:38] [INFO] \ud83d\uddc4\ufe0f  Checking database health...",
+    "[17:47:38] [INFO]    \u2705 Database connected - 20 portfolio entries",
+    "[17:47:38] [INFO]    \u2705 System configuration - 4 entries",
+    "[17:47:38] [INFO]    \u2705 Data integrity - 20 valid portfolio entries",
+    "[17:47:38] [INFO]    \ud83d\udcca Top holdings:",
+    "[17:47:38] [INFO]       \ud83d\udcb0 GOOGL: $280,000.00",
+    "[17:47:38] [INFO]       \ud83d\udcb0 NVDA: $80,000.00",
+    "[17:47:38] [INFO]       \ud83d\udcb0 TSLA: $75,000.00",
+    "[17:47:38] [INFO] \u26a1 Running performance tests...",
+    "[17:47:38] [INFO]    \ud83c\udfc3 Testing / performance (5 requests)...",
+    "[17:47:38] [INFO]       \u23f1\ufe0f  Avg: 0.002s, Min: 0.001s, Max: 0.003s",
+    "[17:47:38] [INFO]       \ud83d\ude80 Excellent response time for /",
+    "[17:47:38] [INFO]    \ud83c\udfc3 Testing /portfolio performance (5 requests)...",
+    "[17:47:38] [INFO]       \u23f1\ufe0f  Avg: 0.002s, Min: 0.002s, Max: 0.002s",
+    "[17:47:38] [INFO]       \ud83d\ude80 Excellent response time for /portfolio",
+    "[17:47:38] [INFO]    \ud83c\udfc3 Testing /health performance (5 requests)...",
+    "[17:47:38] [INFO]       \u23f1\ufe0f  Avg: 0.001s, Min: 0.001s, Max: 0.001s",
+    "[17:47:38] [INFO]       \ud83d\ude80 Excellent response time for /health",
+    "[17:47:39] [INFO] \ud83d\udcbb Checking system resources...",
+    "[17:47:39] [INFO]    \ud83d\udcbe Disk usage: 26.0% (30.7GB free)",
+    "[17:47:39] [INFO]    \ud83d\udd04 Found 1 application process(es)",
+    "[17:47:39] [INFO]       \ud83d\udcca PID 39734: CPU 0.5%, Memory 1.3%",
+    "[17:47:39] [INFO] \ud83d\udcca Generating health report..."
+  ]
+}

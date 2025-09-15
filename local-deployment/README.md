@@ -1,72 +1,123 @@
-# 🚀 True-Asset-ALLUSE Local Deployment
+# True-Asset-ALLUSE Local Deployment
 
-**Intelligent Wealth Management System - Engineered for Compounding Income and Corpus**
+## Quick Start
 
-Complete build and deployment system for running True-Asset-ALLUSE locally on your machine.
+The True-Asset-ALLUSE system can be deployed locally in both mock and live modes with a complete build and deployment pipeline.
 
-## 🎯 Overview
+### 🚀 One-Command Deployment
 
-This local deployment system provides a complete, production-like build and deployment process for True-Asset-ALLUSE. Unlike simple demo scripts, this system:
-
-- ✅ **Complete Build Process** - Compiles, validates, and prepares application artifacts
-- ✅ **Database Setup** - Initializes SQLite database with proper schemas and demo data
-- ✅ **Service Orchestration** - Manages application lifecycle and health checks
-- ✅ **Professional Deployment** - Real deployment process, just running locally
-- ✅ **Dual Mode Support** - Mock mode (demo data) and Live mode (real APIs)
-
-## 🚀 Quick Start
-
-### Prerequisites
-- **Python 3.8+** (required)
-- **pip** (Python package manager)
-- **macOS or Linux** (Windows support via WSL)
-
-### One-Command Setup
 ```bash
-# Setup and build (mock mode)
-./setup.sh
+# Build and deploy in mock mode
+python3 build.py --mode mock && python3 deploy.py --mode mock
 
-# Setup and build (live mode with real APIs)
-./setup.sh --mode live
+# Build and deploy in live mode  
+python3 build.py --mode live && python3 deploy.py --mode live
 ```
 
-### Start the Application
-```bash
-# Start in mock mode (demo data)
-./start.sh mock
+### 🏥 Health Monitoring
 
-# Start in live mode (real APIs - requires API keys)
-./start.sh live
+```bash
+# Run comprehensive health check
+python3 health_check.py --mode mock
+
+# Continuous monitoring
+python3 health_check.py --mode mock --continuous
 ```
 
-### Access the Application
-- **Main Interface**: http://127.0.0.1:8000
-- **Dashboard**: http://127.0.0.1:8000/dashboard  
-- **API Documentation**: http://127.0.0.1:8000/docs
+## System Status
 
-### Stop the Application
-```bash
-./stop.sh
+✅ **Build System**: Complete with dependency management and validation  
+✅ **Deployment System**: Automated deployment with process management  
+✅ **Health Monitoring**: Comprehensive endpoint and database monitoring  
+✅ **Mock Mode**: Fully functional with demo data  
+✅ **Live Mode**: Production-ready configuration  
+
+## Key Features
+
+- **Automated Build Process**: Compiles all workstreams and creates deployable artifacts
+- **Dual Mode Support**: Mock mode for development, live mode for production
+- **Health Monitoring**: Real-time endpoint testing and performance monitoring
+- **Database Management**: SQLite database with automated schema creation
+- **Process Management**: PID-based application lifecycle management
+- **Comprehensive Logging**: Detailed logs for build, deployment, and health operations
+
+## Access Points
+
+Once deployed, access the system at:
+
+- **🏠 Home**: http://127.0.0.1:8000/
+- **📊 Dashboard**: http://127.0.0.1:8000/dashboard  
+- **📚 API Docs**: http://127.0.0.1:8000/docs
+- **🏥 Health**: http://127.0.0.1:8000/health
+
+## System Architecture
+
+The system includes these workstreams:
+
+- **WS1-WS6**: Core trading and portfolio management
+- **WS7**: Natural Language Processing  
+- **WS8**: ML Intelligence
+- **WS9**: Market Intelligence
+- **WS12**: Visualization Intelligence
+- **WS16**: Enhanced Conversational AI
+
+## File Structure
+
+```
+local-deployment/
+├── build.py              # 🔨 Build system
+├── deploy.py             # 🚀 Deployment manager  
+├── health_check.py       # 🏥 Health monitoring
+├── setup.sh              # ⚙️ Environment setup
+├── requirements.txt      # 📦 Dependencies
+├── DEPLOYMENT_GUIDE.md   # 📖 Comprehensive guide
+├── dist/                 # 📦 Deployment artifacts
+├── database/             # 🗄️ SQLite database
+└── logs/                 # 📝 System logs
 ```
 
-## 🎭 Mock vs Live Mode
+## Quick Commands
 
-### Mock Mode (Default)
-- ✅ **No API Keys Required** - Works out of the box
-- ✅ **Demo Portfolio Data** - $143,800 portfolio with realistic positions
-- ✅ **Perfect for Demos** - Investor presentations and team onboarding
+```bash
+# Build
+python3 build.py --mode [mock|live]
 
-### Live Mode (Advanced)
-- 🔑 **API Keys Required** - Real service integrations
-- 📡 **Live Market Data** - Real-time quotes via Databento
-- 🤖 **AI Analysis** - Actual OpenAI GPT responses
+# Deploy  
+python3 deploy.py --mode [mock|live]
 
-## 🔧 Troubleshooting
+# Stop
+python3 deploy.py --stop
 
-### Common Issues
-- **Port in use**: Script will auto-find available port
-- **Python version**: Requires Python 3.8+
-- **Dependencies**: Run `./setup.sh --clean` to reset
+# Health Check
+python3 health_check.py --mode [mock|live]
 
-For detailed instructions, see the full documentation in this README.
+# Status
+python3 deploy.py --status
+```
+
+## Documentation
+
+📖 **[Complete Deployment Guide](DEPLOYMENT_GUIDE.md)** - Comprehensive documentation covering:
+- Detailed build and deployment processes
+- Configuration options
+- Troubleshooting guide
+- API reference
+- Performance benchmarks
+- Security considerations
+
+## Requirements
+
+- Python 3.8+
+- pip package manager
+- SQLite3
+- Internet connection (for live mode)
+
+## Support
+
+For detailed instructions, troubleshooting, and advanced configuration, see the [Deployment Guide](DEPLOYMENT_GUIDE.md).
+
+---
+
+**True-Asset-ALLUSE** - Intelligent Wealth Management System  
+*Engineered for Compounding Income and Corpus*
 

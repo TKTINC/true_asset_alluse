@@ -24,9 +24,6 @@ import structlog
 from src.common.config import get_settings
 from src.common.exceptions import DatabaseError
 
-# Import all models to ensure they are registered with SQLAlchemy
-from src.common.models import *  # noqa: F401, F403
-
 logger = structlog.get_logger(__name__)
 
 # Database settings
@@ -98,6 +95,9 @@ async def init_db() -> None:
             bind=sync_engine,
             expire_on_commit=False
         )
+        
+        # Import all models to ensure they are registered
+        from src.common.models import *  # noqa: F401, F403
         
         logger.info(
             "Database initialized successfully",
@@ -197,6 +197,9 @@ def create_tables() -> None:
         )
     
     try:
+        # Import all models to ensure they are registered
+        from src.common.models import *  # noqa: F401, F403
+        
         Base.metadata.create_all(bind=sync_engine)
         logger.info("Database tables created successfully")
         

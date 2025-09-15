@@ -1,0 +1,8 @@
+{
+  "mode": "live",
+  "build_id": "20250911_174800",
+  "database_path": "/home/ubuntu/true_asset_alluse/local-deployment/database/true_asset_alluse.db",
+  "host": "127.0.0.1",
+  "port": 8000,
+  "debug": false
+}
