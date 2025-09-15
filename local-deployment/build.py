@@ -371,39 +371,326 @@ db = DatabaseManager(config["database_path"])
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
-    return """
+    return f"""
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
     <head>
-        <title>True-Asset-ALLUSE</title>
+        <title>True-Asset-ALLUSE | Intelligent Wealth Management</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <style>
-            body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; background: #f8f9fa; }}
-            .container {{ max-width: 1200px; margin: 0 auto; padding: 20px; }}
-            .header {{ text-align: center; margin-bottom: 40px; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
-            .nav {{ display: flex; justify-content: center; gap: 20px; margin: 30px 0; }}
-            .nav a {{ padding: 12px 24px; background: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: 500; }}
-            .nav a:hover {{ background: #0056b3; }}
-            .status {{ background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 15px; border-radius: 6px; margin: 20px 0; }}
+            * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+            
+            body {{ 
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                line-height: 1.6; 
+                color: #333;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+            }}
+            
+            .hero-section {{
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                overflow: hidden;
+            }}
+            
+            .hero-section::before {{
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%"><stop offset="0%" stop-color="%23ffffff" stop-opacity="0.1"/><stop offset="100%" stop-color="%23ffffff" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="100" fill="url(%23a)"/><circle cx="800" cy="300" r="150" fill="url(%23a)"/><circle cx="400" cy="700" r="120" fill="url(%23a)"/></svg>') no-repeat center center;
+                background-size: cover;
+                opacity: 0.3;
+            }}
+            
+            .container {{
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+                position: relative;
+                z-index: 1;
+            }}
+            
+            .hero-content {{
+                text-align: center;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(20px);
+                border-radius: 24px;
+                padding: 60px 40px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                max-width: 800px;
+                margin: 0 auto;
+            }}
+            
+            .logo {{
+                font-size: 4rem;
+                margin-bottom: 20px;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            }}
+            
+            .hero-title {{
+                font-size: 3.5rem;
+                font-weight: 700;
+                margin-bottom: 20px;
+                background: linear-gradient(135deg, #2d3748, #4a5568);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                line-height: 1.2;
+            }}
+            
+            .hero-subtitle {{
+                font-size: 1.5rem;
+                font-weight: 500;
+                color: #667eea;
+                margin-bottom: 15px;
+                letter-spacing: -0.02em;
+            }}
+            
+            .hero-description {{
+                font-size: 1.1rem;
+                color: #666;
+                margin-bottom: 40px;
+                max-width: 600px;
+                margin-left: auto;
+                margin-right: auto;
+                line-height: 1.7;
+            }}
+            
+            .status-card {{
+                background: linear-gradient(135deg, #48bb78, #38a169);
+                color: white;
+                padding: 20px 30px;
+                border-radius: 16px;
+                margin: 30px 0;
+                box-shadow: 0 10px 30px rgba(72, 187, 120, 0.3);
+                display: inline-block;
+                font-weight: 500;
+                letter-spacing: 0.5px;
+            }}
+            
+            .status-card .status-icon {{
+                font-size: 1.2rem;
+                margin-right: 10px;
+            }}
+            
+            .nav-grid {{
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+                margin-top: 50px;
+                max-width: 900px;
+                margin-left: auto;
+                margin-right: auto;
+            }}
+            
+            .nav-card {{
+                background: white;
+                padding: 30px 25px;
+                border-radius: 16px;
+                text-decoration: none;
+                color: #333;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+                transition: all 0.3s ease;
+                border: 1px solid rgba(0, 0, 0, 0.05);
+                position: relative;
+                overflow: hidden;
+            }}
+            
+            .nav-card::before {{
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                transform: scaleX(0);
+                transition: transform 0.3s ease;
+            }}
+            
+            .nav-card:hover {{
+                transform: translateY(-8px);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+                color: #333;
+                text-decoration: none;
+            }}
+            
+            .nav-card:hover::before {{
+                transform: scaleX(1);
+            }}
+            
+            .nav-icon {{
+                font-size: 2.5rem;
+                margin-bottom: 15px;
+                display: block;
+            }}
+            
+            .nav-title {{
+                font-size: 1.3rem;
+                font-weight: 600;
+                margin-bottom: 10px;
+                color: #2d3748;
+            }}
+            
+            .nav-description {{
+                font-size: 0.95rem;
+                color: #666;
+                line-height: 1.5;
+            }}
+            
+            .features-section {{
+                margin-top: 60px;
+                padding-top: 40px;
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
+            }}
+            
+            .features-title {{
+                text-align: center;
+                font-size: 2rem;
+                font-weight: 600;
+                margin-bottom: 40px;
+                color: #2d3748;
+            }}
+            
+            .features-grid {{
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 30px;
+                margin-top: 30px;
+            }}
+            
+            .feature-item {{
+                text-align: center;
+                padding: 20px;
+            }}
+            
+            .feature-icon {{
+                font-size: 2rem;
+                margin-bottom: 15px;
+                color: #667eea;
+            }}
+            
+            .feature-text {{
+                font-size: 0.9rem;
+                color: #666;
+                font-weight: 500;
+            }}
+            
+            .footer {{
+                text-align: center;
+                margin-top: 60px;
+                padding-top: 30px;
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
+                color: #666;
+                font-size: 0.9rem;
+            }}
+            
+            @media (max-width: 768px) {{
+                .hero-title {{ font-size: 2.5rem; }}
+                .hero-subtitle {{ font-size: 1.2rem; }}
+                .hero-content {{ padding: 40px 30px; }}
+                .nav-grid {{ grid-template-columns: 1fr; }}
+                .features-grid {{ grid-template-columns: repeat(2, 1fr); }}
+            }}
+            
+            @media (max-width: 480px) {{
+                .hero-title {{ font-size: 2rem; }}
+                .hero-content {{ padding: 30px 20px; }}
+                .features-grid {{ grid-template-columns: 1fr; }}
+            }}
         </style>
     </head>
     <body>
-        <div class="container">
-            <div class="header">
-                <h1>🚀 True-Asset-ALLUSE</h1>
-                <h2>Intelligent Wealth Management System</h2>
-                <p>Engineered for Compounding Income and Corpus</p>
-                <div class="status">
-                    ✅ System Status: Active | Mode: {self.mode.upper()} | Build: {self.build_id}
+        <div class="hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="logo">🚀</div>
+                    <h1 class="hero-title">True-Asset-ALLUSE</h1>
+                    <h2 class="hero-subtitle">Intelligent Wealth Management System</h2>
+                    <p class="hero-description">
+                        Advanced algorithmic trading platform engineered for compounding income and corpus growth. 
+                        Harness the power of AI-driven market intelligence and systematic wealth building strategies.
+                    </p>
+                    
+                    <div class="status-card">
+                        <span class="status-icon">✅</span>
+                        System Status: Active | Mode: {config["mode"].upper()} | Build: {config["build_id"]}
+                    </div>
+                    
+                    <div class="nav-grid">
+                        <a href="/dashboard" class="nav-card">
+                            <span class="nav-icon">📊</span>
+                            <div class="nav-title">Portfolio Dashboard</div>
+                            <div class="nav-description">Real-time portfolio performance, analytics, and comprehensive wealth tracking</div>
+                        </a>
+                        
+                        <a href="/portfolio" class="nav-card">
+                            <span class="nav-icon">💼</span>
+                            <div class="nav-title">Portfolio Data</div>
+                            <div class="nav-description">Detailed holdings, positions, and performance metrics in JSON format</div>
+                        </a>
+                        
+                        <a href="/health" class="nav-card">
+                            <span class="nav-icon">🏥</span>
+                            <div class="nav-title">System Health</div>
+                            <div class="nav-description">Monitor system status, database connectivity, and operational metrics</div>
+                        </a>
+                        
+                        <a href="/docs" class="nav-card">
+                            <span class="nav-icon">📚</span>
+                            <div class="nav-title">API Documentation</div>
+                            <div class="nav-description">Complete API reference with interactive testing and integration guides</div>
+                        </a>
+                    </div>
+                    
+                    <div class="features-section">
+                        <h3 class="features-title">Platform Capabilities</h3>
+                        <div class="features-grid">
+                            <div class="feature-item">
+                                <div class="feature-icon">🤖</div>
+                                <div class="feature-text">AI-Powered Analytics</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">📈</div>
+                                <div class="feature-text">Real-Time Market Data</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">🔒</div>
+                                <div class="feature-text">Enterprise Security</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">⚡</div>
+                                <div class="feature-text">High-Performance Trading</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">📱</div>
+                                <div class="feature-text">Multi-Platform Access</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">🎯</div>
+                                <div class="feature-text">Precision Execution</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="footer">
+                        <p><strong>True-Asset-ALLUSE</strong> &copy; 2024 | Engineered for Compounding Income and Corpus</p>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="nav">
-                <a href="/dashboard">📊 Dashboard</a>
-                <a href="/portfolio">💼 Portfolio</a>
-                <a href="/health">🏥 System Health</a>
-                <a href="/docs">📚 API Documentation</a>
             </div>
         </div>
     </body>
