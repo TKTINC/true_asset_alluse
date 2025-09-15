@@ -106,14 +106,21 @@ class RealTrueAssetBuilder:
         shutil.copytree(src_source, src_dest)
         self.log(f"   ✅ Copied source code: {src_source} -> {src_dest}")
         
-        # Copy templates if they exist
-        templates_source = self.project_root / "src" / "ws6_user_interface" / "dashboard" / "templates"
-        if templates_source.exists():
-            templates_dest = self.dist_dir / "templates"
-            if templates_dest.exists():
-                shutil.rmtree(templates_dest)
-            shutil.copytree(templates_source, templates_dest)
-            self.log(f"   ✅ Copied templates: {templates_source} -> {templates_dest}")
+        # Copy templates
+        templates_src = self.project_root / "local-deployment" / "templates"
+        templates_dst = self.dist_dir / "templates"
+        if templates_src.exists():
+            self.log("📄 Copying HTML templates...")
+            shutil.copytree(templates_src, templates_dst, dirs_exist_ok=True)
+            self.log(f"   ✅ Copied templates: {templates_src} -> {templates_dst}")
+        
+        # Copy integrated application
+        integrated_app_src = self.project_root / "local-deployment" / "integrated_app.py"
+        integrated_app_dst = self.dist_dir / "integrated_app.py"
+        if integrated_app_src.exists():
+            self.log("🔗 Copying integrated application...")
+            shutil.copy2(integrated_app_src, integrated_app_dst)
+            self.log(f"   ✅ Copied integrated app: {integrated_app_src} -> {integrated_app_dst}")
             
     def install_dependencies(self):
         """Install Python dependencies"""
@@ -138,25 +145,30 @@ class RealTrueAssetBuilder:
         self.log("   ✅ Dependencies installed")
         
     def create_basic_requirements(self):
-        """Create a basic requirements.txt file"""
+        """Create a basic requirements.txt file for local deployment"""
         requirements = [
             "fastapi>=0.104.0",
             "uvicorn[standard]>=0.24.0",
+            "pydantic>=2.0.0",
+            "pydantic-settings>=2.0.0",
             "sqlalchemy>=2.0.0",
             "alembic>=1.12.0",
-            "pydantic>=2.4.0",
-            "pydantic-settings>=2.0.0",
+            "psycopg2-binary>=2.9.0",
+            "redis>=5.0.0",
+            "celery>=5.3.0",
             "python-multipart>=0.0.6",
-            "jinja2>=3.1.0",
-            "structlog>=23.1.0",
             "python-jose[cryptography]>=3.3.0",
             "passlib[bcrypt]>=1.7.4",
-            "aiosqlite>=0.19.0"
+            "python-dotenv>=1.0.0",
+            "requests>=2.31.0",
+            "httpx>=0.25.0",
+            "websockets>=12.0",
+            "jinja2>=3.1.0",  # For template rendering
+            "aiofiles>=23.0.0"  # For static file serving
         ]
         
         if self.mode == "live":
             requirements.extend([
-                "databento>=0.18.0",
                 "openai>=1.3.7",
                 "newsapi-python>=0.2.6",
                 "ib-insync>=0.9.86"

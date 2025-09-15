@@ -1,8 +1,13 @@
 {
-  "mode": "live",
-  "build_id": "20250911_174800",
-  "database_path": "/home/ubuntu/true_asset_alluse/local-deployment/database/true_asset_alluse.db",
-  "host": "127.0.0.1",
-  "port": 8000,
-  "debug": false
+  "mode": "mock",
+  "build_id": "20250915_091902",
+  "environment": "local",
+  "debug": true,
+  "api_host": "127.0.0.1",
+  "api_port": 8000,
+  "api_prefix": "/api/v1",
+  "database_url": "sqlite:////home/ubuntu/true_asset_alluse/local-deployment/database/true_asset_alluse.db",
+  "log_level": "INFO",
+  "app_version": "1.0.0",
+  "constitution_version": "1.3"
 }
