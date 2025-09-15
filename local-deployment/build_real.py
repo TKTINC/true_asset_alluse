@@ -145,6 +145,7 @@ class RealTrueAssetBuilder:
             "sqlalchemy>=2.0.0",
             "alembic>=1.12.0",
             "pydantic>=2.4.0",
+            "pydantic-settings>=2.0.0",
             "python-multipart>=0.0.6",
             "jinja2>=3.1.0",
             "structlog>=23.1.0",

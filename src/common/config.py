@@ -10,7 +10,11 @@ from functools import lru_cache
 from typing import Optional, List
 from enum import Enum
 
-from pydantic import BaseSettings, Field, validator
+try:
+    from pydantic_settings import BaseSettings
+    from pydantic import Field, validator
+except ImportError:
+    from pydantic import BaseSettings, Field, validator
 from pydantic.networks import PostgresDsn, RedisDsn
 
 
