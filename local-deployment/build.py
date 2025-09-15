@@ -68,6 +68,10 @@ class TrueAssetBuilder:
         else:
             self.log(f"   ✅ Main application: {main_file}")
             
+    def is_virtual_environment(self):
+        """Check if running in a virtual environment"""
+        return hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
+        
     def install_dependencies(self):
         """Install Python dependencies"""
         self.log("📦 Installing dependencies...")
@@ -76,8 +80,16 @@ class TrueAssetBuilder:
         if not requirements_file.exists():
             raise Exception("requirements.txt not found")
             
+        # Determine pip install flags based on environment
+        pip_flags = []
+        if not self.is_virtual_environment():
+            pip_flags.append("--user")
+            self.log("   🔍 Detected system Python, using --user flag")
+        else:
+            self.log("   🔍 Detected virtual environment, installing normally")
+            
         # Install base requirements
-        cmd = [sys.executable, "-m", "pip", "install", "--user", "-r", str(requirements_file)]
+        cmd = [sys.executable, "-m", "pip", "install"] + pip_flags + ["-r", str(requirements_file)]
         result = subprocess.run(cmd, capture_output=True, text=True)
         
         if result.returncode != 0:
@@ -96,7 +108,7 @@ class TrueAssetBuilder:
             ]
             
             for dep in live_deps:
-                cmd = [sys.executable, "-m", "pip", "install", "--user", dep]
+                cmd = [sys.executable, "-m", "pip", "install"] + pip_flags + [dep]
                 result = subprocess.run(cmd, capture_output=True, text=True)
                 if result.returncode == 0:
                     self.log(f"      ✅ {dep}")
