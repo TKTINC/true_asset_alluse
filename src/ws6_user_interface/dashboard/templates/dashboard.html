@@ -1,12 +1,484 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-bg: #1f2937;
+            --light-bg: #f8fafc;
+            --border-color: #e5e7eb;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: #374151;
+        }
+        
+        .navbar-custom {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar {
+            background: white;
+            min-height: calc(100vh - 76px);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 0;
+        }
+        
+        .sidebar .nav-link {
+            color: #6b7280;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background-color: #f3f4f6;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .main-content {
+            padding: 2rem;
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stats-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stats-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stats-change {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .positive {
+            color: var(--success-color);
+        }
+        
+        .negative {
+            color: var(--danger-color);
+        }
+        
+        .portfolio-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .table th {
+            background-color: #f8fafc;
+            border-bottom: 2px solid var(--border-color);
+            font-weight: 600;
+            color: #374151;
+            padding: 1rem;
+        }
+        
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .symbol-cell {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .performance-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .badge-danger {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .quick-actions {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        
+        .system-status {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .workstream-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .workstream-item {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .breadcrumb-custom {
+            background: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+        
+        .breadcrumb-custom .breadcrumb-item + .breadcrumb-item::before {
+            content: ">";
+            color: #6b7280;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                min-height: auto;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .stats-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Dashboard</h1>
-    <p>Welcome, {{ user.id }}!</p>
-    <a href="{{ url_for('logout') }}">Logout</a>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white fw-bold" href="/">
+                <i class="fas fa-rocket me-2"></i>True-Asset-ALLUSE
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="navbar-text text-white me-3">
+                            <i class="fas fa-circle text-success me-1"></i>{{ system_status.mode }} Mode
+                        </span>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i>Portfolio Manager
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/portfolio">Portfolio</a></li>
+                            <li><a class="dropdown-item" href="/analytics">Analytics</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/docs">API Documentation</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="/dashboard">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
+                    <a class="nav-link" href="/portfolio">
+                        <i class="fas fa-briefcase me-2"></i>Portfolio
+                    </a>
+                    <a class="nav-link" href="/analytics">
+                        <i class="fas fa-chart-bar me-2"></i>Analytics
+                    </a>
+                    <a class="nav-link" href="/api/portfolio">
+                        <i class="fas fa-database me-2"></i>API Data
+                    </a>
+                    <a class="nav-link" href="/docs">
+                        <i class="fas fa-book me-2"></i>Documentation
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-custom">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
+                </nav>
+
+                <!-- Page Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="h2 mb-1">Portfolio Dashboard</h1>
+                        <p class="text-muted">Real-time portfolio performance and analytics</p>
+                    </div>
+                    <div>
+                        <span class="badge bg-success fs-6">
+                            <i class="fas fa-check-circle me-1"></i>System Active
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-value text-primary">${{ portfolio.total_value|round(0)|int }}</div>
+                            <div class="stats-label">Total Portfolio Value</div>
+                            <div class="stats-change positive">
+                                <i class="fas fa-arrow-up me-1"></i>+{{ portfolio.total_pnl_percent|round(2) }}%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-value text-success">${{ portfolio.total_pnl|round(0)|int }}</div>
+                            <div class="stats-label">Total P&L</div>
+                            <div class="stats-change positive">
+                                <i class="fas fa-arrow-up me-1"></i>Profitable
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-value text-info">{{ portfolio.total_positions }}</div>
+                            <div class="stats-label">Active Positions</div>
+                            <div class="stats-change">
+                                <i class="fas fa-chart-line me-1"></i>Diversified
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-value text-warning">{{ system_status.workstreams_active }}</div>
+                            <div class="stats-label">AI Workstreams</div>
+                            <div class="stats-change positive">
+                                <i class="fas fa-robot me-1"></i>Active
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Portfolio Holdings -->
+                    <div class="col-lg-8 mb-4">
+                        <div class="portfolio-table">
+                            <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                                <h5 class="mb-0">Portfolio Holdings</h5>
+                                <small class="text-muted">Last updated: {{ system_status.last_update }}</small>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Symbol</th>
+                                            <th>Quantity</th>
+                                            <th>Avg Price</th>
+                                            <th>Current Price</th>
+                                            <th>Market Value</th>
+                                            <th>P&L</th>
+                                            <th>Return %</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for holding in portfolio.holdings %}
+                                        <tr>
+                                            <td class="symbol-cell">{{ holding.symbol }}</td>
+                                            <td>{{ holding.quantity|round(0)|int }}</td>
+                                            <td>${{ holding.avg_price|round(2) }}</td>
+                                            <td>${{ holding.current_price|round(2) }}</td>
+                                            <td>${{ holding.market_value|round(0)|int }}</td>
+                                            <td class="{% if holding.pnl > 0 %}positive{% else %}negative{% endif %}">
+                                                ${{ holding.pnl|round(0)|int }}
+                                            </td>
+                                            <td>
+                                                <span class="performance-badge {% if holding.pnl_percent > 0 %}badge-success{% else %}badge-danger{% endif %}">
+                                                    {{ holding.pnl_percent|round(1) }}%
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions & System Status -->
+                    <div class="col-lg-4">
+                        <!-- Quick Actions -->
+                        <div class="quick-actions mb-4">
+                            <h5 class="mb-3">Quick Actions</h5>
+                            <button class="action-btn">
+                                <i class="fas fa-sync-alt me-2"></i>Refresh Data
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-download me-2"></i>Export Portfolio
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-chart-line me-2"></i>View Analytics
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-cog me-2"></i>System Settings
+                            </button>
+                        </div>
+
+                        <!-- System Status -->
+                        <div class="system-status">
+                            <h5 class="mb-3">System Status</h5>
+                            <div class="status-indicator status-active mb-3">
+                                <i class="fas fa-check-circle me-2"></i>All Systems Operational
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted d-block">Build ID</small>
+                                <code>{{ system_status.build_id }}</code>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted d-block">Environment</small>
+                                <span class="badge bg-primary">{{ system_status.environment.title() }}</span>
+                            </div>
+                            
+                            <div class="workstream-grid">
+                                <div class="workstream-item">
+                                    <small class="text-muted d-block">Rules Engine</small>
+                                    <strong class="text-success">Active</strong>
+                                </div>
+                                <div class="workstream-item">
+                                    <small class="text-muted d-block">ML Intelligence</small>
+                                    <strong class="text-success">Active</strong>
+                                </div>
+                                <div class="workstream-item">
+                                    <small class="text-muted d-block">Market Data</small>
+                                    <strong class="text-success">Active</strong>
+                                </div>
+                                <div class="workstream-item">
+                                    <small class="text-muted d-block">Portfolio Mgmt</small>
+                                    <strong class="text-success">Active</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto-refresh data every 30 seconds
+        setInterval(function() {
+            // In a real application, you would fetch updated data here
+            console.log('Refreshing portfolio data...');
+        }, 30000);
+        
+        // Quick action handlers
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const action = this.textContent.trim();
+                console.log('Action clicked:', action);
+                
+                // Add visual feedback
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+    </script>
 </body>
 </html>
 

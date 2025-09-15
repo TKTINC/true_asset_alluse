@@ -106,13 +106,20 @@ class RealTrueAssetBuilder:
         shutil.copytree(src_source, src_dest)
         self.log(f"   ✅ Copied source code: {src_source} -> {src_dest}")
         
-        # Copy templates
-        templates_src = self.project_root / "local-deployment" / "templates"
+        # Copy templates from actual source
+        templates_src = self.project_root / "src" / "ws6_user_interface" / "dashboard" / "templates"
         templates_dst = self.dist_dir / "templates"
         if templates_src.exists():
-            self.log("📄 Copying HTML templates...")
+            self.log("📄 Copying HTML templates from source...")
             shutil.copytree(templates_src, templates_dst, dirs_exist_ok=True)
             self.log(f"   ✅ Copied templates: {templates_src} -> {templates_dst}")
+        else:
+            self.log("⚠️  Source templates not found, using fallback...")
+            # Fallback to local-deployment templates if source doesn't exist
+            templates_src_fallback = self.project_root / "local-deployment" / "templates"
+            if templates_src_fallback.exists():
+                shutil.copytree(templates_src_fallback, templates_dst, dirs_exist_ok=True)
+                self.log(f"   ✅ Copied fallback templates: {templates_src_fallback} -> {templates_dst}")
         
         # Copy integrated application
         integrated_app_src = self.project_root / "local-deployment" / "integrated_app.py"
