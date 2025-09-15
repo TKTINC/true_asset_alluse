@@ -264,11 +264,11 @@ with open(config_file) as f:
     config = json.load(f)
 
 # Set environment variables
-os.environ["TRUE_ASSET_MODE"] = config["mode"]
-os.environ["TRUE_ASSET_DEBUG"] = "true"
-os.environ["TRUE_ASSET_DATABASE_URL"] = config["database_url"]
-os.environ["TRUE_ASSET_API_HOST"] = config["api_host"]
-os.environ["TRUE_ASSET_API_PORT"] = str(config["api_port"])
+os.environ["ENVIRONMENT"] = "development"
+os.environ["DEBUG"] = "true"
+os.environ["DATABASE_URL"] = config["database_url"]
+os.environ["API_HOST"] = config["api_host"]
+os.environ["API_PORT"] = str(config["api_port"])
 
 # Import and run the real application
 if __name__ == "__main__":
