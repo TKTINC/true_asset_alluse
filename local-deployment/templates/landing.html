@@ -290,10 +290,10 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <strong>Portfolio Performance</strong><br>
-                                <small>Total Returns: +{{ "%.2f"|format(portfolio.total_pnl_percent) }}%</small>
+                                <small>Total Returns: +{{ portfolio.total_pnl_percent|round(2) }}%</small>
                             </div>
                             <div class="text-end">
-                                <h4 class="mb-0">${{ "{:,.0f}"|format(portfolio.total_pnl) }}</h4>
+                                <h4 class="mb-0">${{ portfolio.total_pnl|round(0)|int }}</h4>
                                 <small>Profit Generated</small>
                             </div>
                         </div>
@@ -310,7 +310,7 @@
                 <div class="col-lg-6">
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <div class="stat-value">${{ "{:,.0f}"|format(portfolio.total_value) }}</div>
+                            <div class="stat-value">${{ portfolio.total_value|round(0)|int }}</div>
                             <div class="stat-label">Total Portfolio Value</div>
                         </div>
                         <div class="stat-card">
@@ -322,7 +322,7 @@
                             <div class="stat-label">AI Workstreams</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-value">{{ "%.1f"|format(portfolio.total_pnl_percent) }}%</div>
+                            <div class="stat-value">{{ portfolio.total_pnl_percent|round(1) }}%</div>
                             <div class="stat-label">Total Returns</div>
                         </div>
                     </div>

@@ -119,15 +119,15 @@
         <div class="portfolio-summary">
             <div class="row">
                 <div class="col-md-3">
-                    <h3 class="h4 mb-1">${{ "{:,.0f}"|format(portfolio.total_value) }}</h3>
+                    <h3 class="h4 mb-1">${{ portfolio.total_value|round(0)|int }}</h3>
                     <p class="mb-0 opacity-75">Total Portfolio Value</p>
                 </div>
                 <div class="col-md-3">
-                    <h3 class="h4 mb-1">${{ "{:,.0f}"|format(portfolio.total_pnl) }}</h3>
+                    <h3 class="h4 mb-1">${{ portfolio.total_pnl|round(0)|int }}</h3>
                     <p class="mb-0 opacity-75">Total Profit/Loss</p>
                 </div>
                 <div class="col-md-3">
-                    <h3 class="h4 mb-1">{{ "{:+.2f}"|format(portfolio.total_pnl_percent) }}%</h3>
+                    <h3 class="h4 mb-1">{{ portfolio.total_pnl_percent|round(2) }}%</h3>
                     <p class="mb-0 opacity-75">Total Return</p>
                 </div>
                 <div class="col-md-3">
@@ -172,23 +172,23 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{{ "{:,.0f}"|format(holding.quantity) }}</td>
-                                    <td>${{ "{:,.2f}"|format(holding.avg_price) }}</td>
-                                    <td>${{ "{:,.2f}"|format(holding.current_price) }}</td>
-                                    <td class="fw-bold">${{ "{:,.0f}"|format(holding.market_value) }}</td>
+                                    <td>{{ holding.quantity|round(0)|int }}</td>
+                                    <td>${{ holding.avg_price|round(2) }}</td>
+                                    <td>${{ holding.current_price|round(2) }}</td>
+                                    <td class="fw-bold">${{ holding.market_value|round(0)|int }}</td>
                                     <td class="{% if holding.pnl > 0 %}text-success{% else %}text-danger{% endif %} fw-bold">
-                                        ${{ "{:,.0f}"|format(holding.pnl) }}
+                                        ${{ holding.pnl|round(0)|int }}
                                     </td>
                                     <td>
                                         <span class="badge {% if holding.pnl_percent > 0 %}bg-success{% else %}bg-danger{% endif %}">
-                                            {{ "{:+.1f}"|format(holding.pnl_percent) }}%
+                                            {{ holding.pnl_percent|round(1) }}%
                                         </span>
                                     </td>
                                     <td>
                                         <div class="progress" style="height: 8px;">
                                             <div class="progress-bar bg-primary" style="width: {{ (holding.market_value / portfolio.total_value * 100)|round(1) }}%"></div>
                                         </div>
-                                        <small class="text-muted">{{ "{:.1f}"|format(holding.market_value / portfolio.total_value * 100) }}%</small>
+                                        <small class="text-muted">{{ (holding.market_value / portfolio.total_value * 100)|round(1) }}%</small>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -204,7 +204,7 @@
                 <div class="performance-chart">
                     <h5 class="mb-3">Performance Overview</h5>
                     <div class="text-center py-4">
-                        <div class="display-6 text-success mb-2">{{ "{:+.1f}"|format(portfolio.total_pnl_percent) }}%</div>
+                        <div class="display-6 text-success mb-2">{{ portfolio.total_pnl_percent|round(1) }}%</div>
                         <p class="text-muted">Total Return</p>
                         <div class="progress mb-3" style="height: 10px;">
                             <div class="progress-bar bg-success" style="width: {{ (portfolio.total_pnl_percent + 50)|round(0) }}%"></div>
@@ -225,8 +225,8 @@
                             <span>{{ holding.symbol }}</span>
                         </div>
                         <div class="text-end">
-                            <div class="fw-bold">{{ "{:.1f}"|format(holding.market_value / portfolio.total_value * 100) }}%</div>
-                            <small class="text-muted">${{ "{:,.0f}"|format(holding.market_value) }}</small>
+                            <div class="fw-bold">{{ (holding.market_value / portfolio.total_value * 100)|round(1) }}%</div>
+                            <small class="text-muted">${{ holding.market_value|round(0)|int }}</small>
                         </div>
                     </div>
                     <div class="progress mb-3" style="height: 6px;">

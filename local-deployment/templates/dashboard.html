@@ -315,16 +315,16 @@
                 <div class="row mb-4">
                     <div class="col-md-3 mb-3">
                         <div class="stats-card">
-                            <div class="stats-value text-primary">${{ "{:,.0f}"|format(portfolio.total_value) }}</div>
+                            <div class="stats-value text-primary">${{ portfolio.total_value|round(0)|int }}</div>
                             <div class="stats-label">Total Portfolio Value</div>
                             <div class="stats-change positive">
-                                <i class="fas fa-arrow-up me-1"></i>+{{ "%.2f"|format(portfolio.total_pnl_percent) }}%
+                                <i class="fas fa-arrow-up me-1"></i>+{{ portfolio.total_pnl_percent|round(2) }}%
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
                         <div class="stats-card">
-                            <div class="stats-value text-success">${{ "{:,.0f}"|format(portfolio.total_pnl) }}</div>
+                            <div class="stats-value text-success">${{ portfolio.total_pnl|round(0)|int }}</div>
                             <div class="stats-label">Total P&L</div>
                             <div class="stats-change positive">
                                 <i class="fas fa-arrow-up me-1"></i>Profitable
@@ -376,16 +376,16 @@
                                         {% for holding in portfolio.holdings %}
                                         <tr>
                                             <td class="symbol-cell">{{ holding.symbol }}</td>
-                                            <td>{{ "{:,.0f}"|format(holding.quantity) }}</td>
-                                            <td>${{ "{:,.2f}"|format(holding.avg_price) }}</td>
-                                            <td>${{ "{:,.2f}"|format(holding.current_price) }}</td>
-                                            <td>${{ "{:,.0f}"|format(holding.market_value) }}</td>
+                                            <td>{{ holding.quantity|round(0)|int }}</td>
+                                            <td>${{ holding.avg_price|round(2) }}</td>
+                                            <td>${{ holding.current_price|round(2) }}</td>
+                                            <td>${{ holding.market_value|round(0)|int }}</td>
                                             <td class="{% if holding.pnl > 0 %}positive{% else %}negative{% endif %}">
-                                                ${{ "{:,.0f}"|format(holding.pnl) }}
+                                                ${{ holding.pnl|round(0)|int }}
                                             </td>
                                             <td>
                                                 <span class="performance-badge {% if holding.pnl_percent > 0 %}badge-success{% else %}badge-danger{% endif %}">
-                                                    {{ "{:+.1f}"|format(holding.pnl_percent) }}%
+                                                    {{ holding.pnl_percent|round(1) }}%
                                                 </span>
                                             </td>
                                         </tr>
